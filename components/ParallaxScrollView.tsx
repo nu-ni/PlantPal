@@ -51,13 +51,17 @@ export default function ParallaxScrollView({
             { backgroundColor: headerBackgroundColor[colorScheme] },
             headerAnimatedStyle,
           ]}>
-          {headerImage}
+          {/* Wrapper mit abgerundeten Ecken */}
+          <ThemedView style={styles.roundedWrapper}>
+            {headerImage}
+          </ThemedView>
         </Animated.View>
         <ThemedView style={styles.content}>{children}</ThemedView>
       </Animated.ScrollView>
     </ThemedView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -66,6 +70,16 @@ const styles = StyleSheet.create({
   header: {
     height: 250,
     overflow: 'hidden',
+    justifyContent: 'center', // Zentriert das Bild vertikal
+    alignItems: 'center', // Zentriert das Bild horizontal
+  },
+  roundedWrapper: {
+    width: 200, // Passe die Größe an deine Bedürfnisse an
+    height: 200, // Passe die Größe an deine Bedürfnisse an
+    borderRadius: 100, // Halbiert die Breite/Höhe für einen runden Rahmen
+    overflow: 'hidden', // Versteckt alles, was außerhalb der Ränder liegt
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
