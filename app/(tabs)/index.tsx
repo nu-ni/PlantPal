@@ -1,70 +1,140 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
+import { Image, StyleSheet, Pressable, Text, ScrollView, View } from 'react-native';
+import React from 'react';
 import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 
-export default function HomeScreen() {
+export default function Index() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        {/* Header mit Bild */}
+        <View style={styles.roundedWrapper}>
+          <Image
+            source={require('@/assets/images/green-plant-background.jpeg')}
+            style={styles.plantLogo}
+          />
+        </View>
+
+        {/* Erster großer, runder Button */}
+        <View style={styles.roundButtonContainer}>
+          <Pressable
+            style={styles.roundButton}
+            onPress={() => console.log("Großer runder Button gedrückt")}
+          >
+            <Text style={styles.roundButtonText}>+</Text>
+          </Pressable>
+        </View>
+
+        {/* Willkommenstext und HelloWave-Komponente */}
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Welcome!</Text>
+          <HelloWave />
+        </View>
+
+        {/* Beschreibungstext */}
+        <View style={styles.stepContainer}>
+          <Text style={styles.descriptionText}>
+            Erstelle schnell Pflanzenprofile, erstelle individuelle Giesspläne und teile sie mit Freunden oder Nachbarn. So bleiben deine grünen Mitbewohner immer perfekt versorgt – ganz ohne Stress!
+          </Text>
+          <Text style={styles.subtitle}>Mach Pflanzenpflege smart und einfach – mit PlantPals!</Text>
+        </View>
+
+        {/* Import Button */}
+        <View style={styles.centeredButtonContainer}>
+          <Pressable
+            style={styles.Button}
+            onPress={() => console.log("Importiert")}
+          >
+            <Text style={styles.buttonText}>Import</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  scrollView: {
+    alignItems: 'center', // Center contents horizontally
+    paddingTop: 100, // Ensure content is not hidden behind header
+    paddingBottom: 50, // Provide padding at the bottom for better spacing
+  },
+  roundedWrapper: {
+    width: 500,
+    height: 500,
+    borderRadius: 250,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: -200,
+    zIndex: -1,
+  },
+  plantLogo: {
+    height: '150%',
+    width: '150%', 
+    resizeMode: 'contain',
+  },
+  roundButtonContainer: {
+    marginTop: 170,
+    marginBottom: 30,
+  },
+  roundButton: {
+    backgroundColor: '#557F60',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roundButtonText: {
+    color: 'black',
+    fontSize: 50,
+    textAlign: 'center',
+  },
+  Button: {
+    backgroundColor: '#557F60',
+    padding: 25,
+    borderRadius: 60,
+    width: 200,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 18,
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    marginVertical: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginRight: 10,
   },
   stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 20, // Padding for better text spacing
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  descriptionText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: 'normal',
+    textAlign: 'center',
+  },
+  centeredButtonContainer: {
+    marginTop: 30,
+    marginBottom: 50,
+    alignItems: 'center',
   },
 });
