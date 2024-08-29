@@ -1,4 +1,3 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Button } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -6,12 +5,12 @@ import { ThemedView } from '@/components/ThemedView';
 import { useState, useEffect } from 'react';
 import { PlantCollection, Plant } from '@/services/Database';
 import { getAll, createData, updateData, deleteData } from '@/services/DatabaseService';
+import React from 'react';
 
 export default function TabTwoScreen() {
   const [collection, setCollection] = useState<PlantCollection[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
 
-  console.log('component init')
   useEffect(() => {
     const fetchData = async () => {
       const collectionData = await getAll('PlantCollection');
@@ -71,17 +70,15 @@ export default function TabTwoScreen() {
 
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
+      headerText={'Db-Test'}>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">AAA!</ThemedText>
-        <ThemedText type="title">{collection[0].title}!</ThemedText>
+        {/* <ThemedText type="title">{collection[0].title}!</ThemedText> */}
       </ThemedView>
-      <Button title='create' onPress={addPlantCollection}></Button>
+      <Button title='create collection' onPress={addPlantCollection}></Button>
       <Button title='create plant' onPress={addPlant}></Button>
       <Button title='update plant' onPress={updatePlant}></Button>
       <Button title='delete plant' onPress={deletePlant}></Button>
-
     </ParallaxScrollView>
   );
 }
