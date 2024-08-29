@@ -1,39 +1,29 @@
-import { AddPlantForm } from '@/components/addPlantForm';
-import React from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import { AddPlantForm } from "@/components/addPlantForm";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import React from "react";
+import { View, StyleSheet, Button, Text } from "react-native";
 
 export default function CollectionScreen() {
   return (
-    <View style={styles.container}>
-    </View>
+    <ParallaxScrollView headerText={"Your Collections"}>
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">Explore</ThemedText>
+      </ThemedView>
+      <ThemedText>
+        This app includes example code to help you get started.
+      </ThemedText>
+      <Text>Detailed Collection Page</Text>
+      
+    </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#557F60',
-  },
-  header: {
-    
-    padding: 30,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    borderBottomLeftRadius: 20, borderBottomRightRadius: 20,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#646363',
-    
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  contentText: {
-    fontSize: 18,
-    color: '#333',
+  
+  titleContainer: {
+    flexDirection: 'row',
+    gap: 8,
   },
 });

@@ -65,7 +65,6 @@ export function AddPlantForm() {
         />
       </View>
       <Button title="Submit" onPress={handleSubmit} />
-      <ActionButton></ActionButton>
     </View>
   );
 }
