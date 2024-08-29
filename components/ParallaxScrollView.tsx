@@ -47,6 +47,7 @@ export default function ParallaxScrollView({ children, headerText }: Props) {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
