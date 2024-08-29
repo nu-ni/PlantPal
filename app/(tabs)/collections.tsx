@@ -1,16 +1,10 @@
 import { AddPlantForm } from '@/components/addPlantForm';
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, StyleSheet, Button } from 'react-native';
 
 export default function CollectionScreen() {
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Collections</Text>
-      </View>
-      {/* Button */}
-      <AddPlantForm></AddPlantForm>
     </View>
   );
 }
@@ -35,8 +29,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center', // Center the content vertically
-    alignItems: 'center', // Center the content horizontally
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contentText: {
     fontSize: 18,

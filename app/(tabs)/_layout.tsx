@@ -32,6 +32,33 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="collections"
+        options={{
+          title: 'Collections',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'menu' : 'menu-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="detailedCollection"
+        options={{
+          title: 'Detailed Collection',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'add-circle' : 'add-circle'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="export"
+        options={{
+          title: 'Export',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'share' : 'share-outline'} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
