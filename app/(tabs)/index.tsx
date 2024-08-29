@@ -75,12 +75,14 @@ const styles = StyleSheet.create({
   },
   plantLogo: {
     height: '150%',
-    width: '150%', 
+    width: '150%',
     resizeMode: 'contain',
   },
   roundButtonContainer: {
     marginTop: 170,
     marginBottom: 30,
+    alignItems: 'center', 
+    justifyContent: 'center',
   },
   roundButton: {
     backgroundColor: '#557F60',
@@ -91,9 +93,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   roundButtonText: {
-    color: 'black',
+    color: 'white',
     fontSize: 50,
     textAlign: 'center',
+    marginBottom: 5,
   },
   Button: {
     backgroundColor: '#557F60',
@@ -101,10 +104,11 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     width: 200,
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 20,
   },
   buttonText: {
-    color: 'black',
+    color: 'white',
     fontSize: 18,
   },
   titleContainer: {
@@ -120,7 +124,7 @@ const styles = StyleSheet.create({
   stepContainer: {
     alignItems: 'center',
     marginBottom: 20,
-    paddingHorizontal: 20, // Padding for better text spacing
+    paddingHorizontal: 20,
   },
   descriptionText: {
     fontSize: 16,
