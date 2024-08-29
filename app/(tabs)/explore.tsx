@@ -1,28 +1,33 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform, Button, TouchableOpacity } from 'react-native';
-
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
+import { StyleSheet, Button } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { Plant, PlantCollection, createData, getAll } from '@/services/DatabaseService';
 import { useState, useEffect } from 'react';
+import { PlantCollection, Plant } from '@/services/Database';
+import { getAll, createData, updateData, deleteData } from '@/services/DatabaseService';
 
 export default function TabTwoScreen() {
-  const [collection, setCollection] = useState<Plant[] | PlantCollection[]>([]);
+  const [collection, setCollection] = useState<PlantCollection[]>([]);
+  const [plants, setPlants] = useState<Plant[]>([]);
 
+  console.log('component init')
   useEffect(() => {
     const fetchData = async () => {
-      const collectionData = await getAll('plantCollection');
-      setCollection(collectionData);
+      const collectionData = await getAll('PlantCollection');
+      setCollection(collectionData as PlantCollection[]);
+      const fetchedPlants = await getAll('Plant');
+      setPlants(fetchedPlants  as Plant[]);
+      console.log('colllection', collection);
+      console.log('plant', plants);
     }
 
     fetchData();
   }, []);
 
-  const handleButtonPress = async () => {
-    let tableName = "plantCollection";
+  const addPlantCollection = async () => {
+    console.log('collection button pressed');
+    let tableName = "PlantCollection";
     let data: PlantCollection = {
       title: "yourTitle",
       lastActive: new Date(),
@@ -31,17 +36,52 @@ export default function TabTwoScreen() {
     await createData(tableName, data);
   }
 
+  const addPlant = async () => {
+    console.log('add plant button pressed');
+    let tableName = "Plant";
+    let data: Plant = {
+      title: 'newplant',
+      frequency: 10,
+      waterAmount: 100,
+      collectionId: 2,
+    };
+
+    await createData(tableName, data);
+  }
+
+  const deletePlant = async () => {
+    console.log('delete plant button pressed');
+    let tableName = "Plant";
+
+    await deleteData(tableName, 1);
+  }
+
+  const updatePlant = async () => {
+    console.log('update plant button pressed');
+    let tableName = "Plant";
+    let data: Plant = {
+      title: 'updated plant',
+      frequency: 10,
+      waterAmount: 100,
+      collectionId: 2,
+    };
+
+    await updateData(tableName, 1, data);
+  }
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
       headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">EEE!</ThemedText>
-        {/* <ThemedText type="title">{ collection[0].title }!</ThemedText> */}
+        <ThemedText type="title">AAA!</ThemedText>
+        <ThemedText type="title">{collection[0].title}!</ThemedText>
       </ThemedView>
-      <TouchableOpacity onPress={handleButtonPress} >
-        <Button title='create'></Button>
-      </TouchableOpacity>
+      <Button title='create' onPress={addPlantCollection}></Button>
+      <Button title='create plant' onPress={addPlant}></Button>
+      <Button title='update plant' onPress={updatePlant}></Button>
+      <Button title='delete plant' onPress={deletePlant}></Button>
+
     </ParallaxScrollView>
   );
 }
