@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Pressable, Text, ScrollView, View } from 'react-native';
 import React from 'react';
 import { HelloWave } from '@/components/HelloWave';
+import { Link } from 'expo-router';
 
 export default function Index() {
   return (
@@ -16,12 +17,11 @@ export default function Index() {
 
         {/* Erster großer, runder Button */}
         <View style={styles.roundButtonContainer}>
-          <Pressable
-            style={styles.roundButton}
-            onPress={() => console.log("Großer runder Button gedrückt")}
-          >
+          <Link href="/detailedCollection" asChild>
+          <Pressable style={styles.roundButton}>
             <Text style={styles.roundButtonText}>+</Text>
           </Pressable>
+          </Link>
         </View>
 
         {/* Willkommenstext und HelloWave-Komponente */}
