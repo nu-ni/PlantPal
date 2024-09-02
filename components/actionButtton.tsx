@@ -1,11 +1,24 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
-export function ActionButton() {
+
+interface ActionButtonProps {
+  title: string;
+  onPress: () => void;
+  disabled: boolean;
+}
+
+export function ActionButton({ title, onPress, disabled }: ActionButtonProps) {
   return (
     <View>
-      <Pressable style={styles.button} onPress={() => console.log("Button Pressed")}>
-        <Text style={styles.buttonText}>Submit</Text>
+      <Pressable
+        style={[styles.button, disabled && styles.buttonDisabled]}
+        onPress={onPress}
+        disabled={disabled}
+      >
+        <Text style={[styles.buttonText, disabled && styles.buttonTextDisabled]}>
+          {title}
+        </Text>
       </Pressable>
     </View>
   );
@@ -16,9 +29,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 10,
     borderRadius: 10,
-    alignItems: "center", // Centers the text horizontally
+    alignItems: "center",
+  },
+  buttonDisabled: {
+    backgroundColor: "gray",
   },
   buttonText: {
-    color: "black", // Customize text color
+    color: "black",
+  },
+  buttonTextDisabled: {
+    color: "lightgray",
   },
 });
