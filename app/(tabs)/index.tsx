@@ -1,10 +1,51 @@
 import { Image, StyleSheet, Pressable, Text, ScrollView, View } from 'react-native';
 import React from 'react';
 import { HelloWave } from '@/components/HelloWave';
-import { router } from 'expo-router';
-
+import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from 'expo-document-picker';
+import { insertData, insertMany, getIdOfLastInsert, Tables } from '@/services/DatabaseService';
+import { Plant } from '@/data/models';
 
 export default function Index() {
+  const handleImport = async () => {
+    const inputFiles = await DocumentPicker.getDocumentAsync({
+      type: 'application/json',
+      copyToCacheDirectory: true,
+    });
+
+    if (inputFiles.canceled) {
+      console.log("No file selected");
+      return;
+    }
+
+    for (let inputFile of inputFiles.assets) {
+      if (inputFile.file) {
+        let { uri } = inputFile;
+        let fileContent = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.UTF8,
+        });
+
+        let data = JSON.parse(fileContent);
+
+        if (!data) {
+          console.log("No data imported");
+          return;
+        }
+
+        let { collection, plants } = data;
+        delete collection.id;
+
+        await insertData(Tables.PLANT_COLLECTION, collection);
+
+        let newId = await getIdOfLastInsert(collection);
+        let newPlants = plants.map((plant: Plant[]) => ({ ...plant, collectionId: newId }));
+        await insertMany(Tables.PLANT, newPlants);
+
+        console.log("Import successful");
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -46,7 +87,7 @@ export default function Index() {
         <View style={styles.centeredButtonContainer}>
           <Pressable
             style={styles.Button}
-            onPress={() => console.log("Importiert")}
+            onPress={handleImport}
           >
             <Text style={styles.buttonText}>Import</Text>
           </Pressable>

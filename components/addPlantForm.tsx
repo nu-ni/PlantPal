@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
-import { ActionButton } from "./actionButtton";
+import CameraScreen from "./CameraScreen";
+import { Ionicons } from "@expo/vector-icons";
 
 export function AddPlantForm() {
   const [plantName, setPlantName] = useState("");
   const [timesPerWeek, setTimesPerWeek] = useState("");
   const [plantImage, setPlantImage] = useState("");
   const [amount, setAmount] = useState("");
+  const [cameraScreenVisible, setCameraScreenVisible] = useState(false); // Correct state management
 
   const handlePlantNameChange = (text: string) => {
     setPlantName(text);
@@ -28,6 +30,10 @@ export function AddPlantForm() {
     console.log("submitted");
   };
 
+  const handleCameraIconClick = () => {
+    setCameraScreenVisible((prevState) => !prevState);
+  };
+
   return (
     <View>
       <View style={styles.row}>
@@ -46,7 +52,7 @@ export function AddPlantForm() {
           onChangeText={handleTimesPerWeekChange}
         />
       </View>
-      
+
       <View style={styles.row}>
         <Text style={styles.label}>Amount:</Text>
         <TextInput
@@ -58,13 +64,20 @@ export function AddPlantForm() {
 
       <View style={styles.row}>
         <Text style={styles.label}>Plant Image:</Text>
-        <TextInput
-          style={styles.input}
-          value={plantImage}
-          onChangeText={handlePlantImageChange}
-        />
       </View>
-      <Button title="Submit" onPress={handleSubmit} />
+      
+      {!cameraScreenVisible && (
+        <Ionicons name="camera" size={30} onPress={handleCameraIconClick} />
+      )}
+      
+      {cameraScreenVisible && (
+        <View>
+          <Ionicons name="close" size={30} onPress={handleCameraIconClick} />
+          <CameraScreen />
+        </View>
+      )}
+      <Button title="Save" onPress={handleSubmit} />
+      <Button title="Back" onPress={handleSubmit} />
     </View>
   );
 }
@@ -76,14 +89,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   label: {
-    color: '#E3E3E3',
+    color: "#E3E3E3",
     marginRight: 10,
     fontSize: 16,
     fontWeight: "bold",
   },
   input: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
