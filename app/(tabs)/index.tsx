@@ -63,7 +63,7 @@ export default function Index() {
         <Pressable style={styles.roundButton}
         onPress={() =>
           router.push({
-            pathname: "/detailedCollection",
+            pathname: "/collections",
           })
         }>
             <Text style={styles.roundButtonText}>+</Text>
