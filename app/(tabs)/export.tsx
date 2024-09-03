@@ -87,7 +87,6 @@ export default function ExportScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
   ButtonContainer: {
     marginBottom: 30,
