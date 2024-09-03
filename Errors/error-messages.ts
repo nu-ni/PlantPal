@@ -7,5 +7,6 @@ export const Errors = {
     deleteError: "Error deleting dataset from database",
     shareFileError: 'Error exporting and sharing data:',
     saveFileError: 'Error saving file to device:',
+    initializeDatabaseError: 'Error initializing database:',
 }
 

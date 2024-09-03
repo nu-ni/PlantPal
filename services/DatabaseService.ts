@@ -8,14 +8,14 @@ export enum Tables {
 }
 
 const tableCreationMap: Dict = {
-    [Tables.PLANT]: `
+    [Tables.PLANT_COLLECTION]: `
     CREATE TABLE IF NOT EXISTS PlantCollection (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       lastActive DATE NOT NULL
     )
   `,
-    [Tables.PLANT_COLLECTION]: `
+    [Tables.PLANT]: `
     CREATE TABLE IF NOT EXISTS Plant (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
@@ -31,38 +31,41 @@ const tableCreationMap: Dict = {
 export const getDBConnection = async (): Promise<SQLiteDatabase> => {
     const db = await openDatabaseAsync('plant-pal.sqlite');
     if (!db) throw new Error(Errors.connectionError);
-    return initializeDatabase(db);
+    initializeDatabase(db);
+    return db;
 };
 
 const initializeDatabase = async (db: SQLiteDatabase) => {
     // TODO: Make this happen only on app startup
-    const tableNames = Object.keys(tableCreationMap);
+    try {
+        const tableNames = Object.keys(tableCreationMap);
 
-    for await (let name of tableNames) {
-        const checkQuery =
-            `SELECT name FROM sqlite_master WHERE type='table' AND name='${name}';`;
-        const results = await db.getAllAsync(checkQuery);
+        for await (let name of tableNames) {
+            let checkQuery =
+                `SELECT name FROM sqlite_master WHERE type='table' AND name='${name}';`;
+            let results = await db.getAllAsync(checkQuery);
 
-        if (results.length == 0) {
-            console.log('results', results);
-            const query = tableCreationMap[name];
-            await db.execAsync(query);
+            if (results.length == 0) {
+                let query = tableCreationMap[name];
+                await db.execAsync(query);
+            }
         }
+    } catch (err) {
+        console.log(Errors.initializeDatabaseError, err);
     }
-    return db;
 };
 
 export const insertData =
     async (tableName: string, data: Plant | PlantCollection) => {
-    const db = await getDBConnection();
+        const db = await getDBConnection();
 
-    try {
-        const columns = Object.keys(data).join(", ");
-        const values = Object.values(data).map(x => `'${x}'`).join(", ");
+        try {
+            const columns = Object.keys(data).join(", ");
+            const values = Object.values(data).map(x => `'${x}'`).join(", ");
 
-        const query = `INSERT INTO ${tableName} (${columns}) VALUES (${values});`;
-        return db.runAsync(query);
-    } catch (err) {
+            const query = `INSERT INTO ${tableName} (${columns}) VALUES (${values});`;
+            return db.runAsync(query);
+        } catch (err) {
             console.log(Errors.createDataError, err);
         }
     };
@@ -119,15 +122,15 @@ export const getById = async (tableName: string, id: number) => {
 
 export const getPlantsByCollectionId =
     async (tableName: string, collectionId: number) => {
-    const db = await getDBConnection();
+        const db = await getDBConnection();
 
-    try {
-        const query = `SELECT * FROM ${tableName} WHERE id = ?;`;
-        return await db.runAsync(query, [collectionId]);
-    } catch (err) {
-        console.log(Errors.fetchByIdError, err);
-    }
-};
+        try {
+            const query = `SELECT * FROM ${tableName} WHERE id = ?;`;
+            return await db.runAsync(query, [collectionId]);
+        } catch (err) {
+            console.log(Errors.fetchByIdError, err);
+        }
+    };
 
 
 export const updateData = async (tableName: string, id: number, data: Plant | PlantCollection) => {
