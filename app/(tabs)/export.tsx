@@ -2,12 +2,12 @@ import CollectionCard from '@/components/CollectionCard';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { getAll, getPlantsByCollectionId, Tables } from '@/services/DatabaseService';
 import React, { useEffect, useState } from 'react';
-import { Button, Pressable, StyleSheet, Text, View } from 'react-native';
-import InfoButton from '../../components/InfoButton';
+import { StyleSheet, Text, View } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { PlantCollection } from '@/data/models';
 import { Errors } from '@/Errors/error-messages';
+import { Pressable } from 'react-native';
 
 export default function ExportScreen() {
   const [collections, setCollections] = useState<PlantCollection[]>([]);
@@ -66,7 +66,6 @@ export default function ExportScreen() {
 
   return (
     <ParallaxScrollView headerText={'Export'}>
-      <InfoButton onClick={() => console.log('InfoButton clicked')} />
       {collections.map((collection) => {
         return (
           <CollectionCard
@@ -77,45 +76,35 @@ export default function ExportScreen() {
           />
         )
       })}
-      <View style={styles.roundButtonContainer}>
-        <Pressable
-          style={styles.roundButton}
-          onPress={() => console.log("Großer runder Button gedrückt")}
-        >
-          <Text style={styles.roundButtonText}>+</Text>
-        </Pressable>
-        <Button title='Share' onPress={handleExportAndShare}></Button>
-        <Button title='save' onPress={handleSaveToFile}></Button>
-      </View>
+      <View style={styles.ButtonContainer}>
+          <Pressable
+            style={styles.Button}
+            onPress={handleExportAndShare}>
+            <Text style={styles.buttonText}>Share</Text>
+          </Pressable>
+        </View>
     </ParallaxScrollView>
   );
 }
 
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  roundButtonContainer: {
+  ButtonContainer: {
     marginBottom: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  roundButton: {
-    backgroundColor: '#66AE54',
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    display: 'flex',
+  Button: {
+  backgroundColor: "white",
+  width: "80%",
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 20,
+  borderRadius: 25,
   },
-  roundButtonText: {
-    top: '-10%',
-    color: 'white',
-    fontSize: 40,
-    textAlign: 'center',
-  },
+  buttonText: {
+  color: "black",
+  fontSize: 20
+  }
 });
 
