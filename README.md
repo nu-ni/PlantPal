@@ -1,6 +1,8 @@
 # Welcome to PlantPal 🪴 👋
 
-![App in use](https://github.com/user-attachments/assets/334e49d4-9d56-4798-a31c-dca6284769f3)
+<p align="center">
+<img src="assets/images/app-in-use.png" alt="Logo" width="300"/>
+</p>
 
 PlantPal is your ultimate companion for plant care, ensuring that your green friends are well taken care of even when you're away. Whether you're a frequent traveler, a busy professional, or just someone who loves plants, PlantPal makes plant care effortless by allowing you to create and share customized watering schedules for each of your plants.
 
