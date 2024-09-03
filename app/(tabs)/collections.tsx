@@ -14,6 +14,8 @@ export default function CollectionScreen() {
   const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
   const router = useRouter();
+  const TriggerView = Platform.OS === "web" ? View : Pressable;
+  const [open, setOpen] = useState(false);
 
   const [collections, setCollections] = useState<PlantCollection[]>([]);
 
@@ -96,7 +98,50 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
-      <Ionicons name="information-circle-outline" size={30}></Ionicons>
+      {/* Tooltip Integration */}
+      <Tooltip.Root
+        {...Platform.select({
+          web: {},
+          default: {
+            open,
+            onDismiss: () => setOpen(false),
+          },
+        })}
+      >
+        <Tooltip.Trigger>
+          <TriggerView
+            {...Platform.select({
+              web: {},
+              default: {
+                onPress: () => setOpen(true),
+              },
+            })}
+          >
+            <Ionicons name="information-circle-outline" size={30} />
+          </TriggerView>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          sideOffset={3}
+          containerStyle={{
+            paddingLeft: 16,
+            paddingRight: 16,
+            paddingTop: 8,
+            paddingBottom: 8,
+          }}
+          onTap={() => {
+            setOpen(false);
+          }}
+          dismissDuration={500}
+          disableTapToDismiss
+          side="right"
+          presetAnimation="fadeIn"
+          backgroundColor="black"
+          borderRadius={12}
+        >
+          <Tooltip.Text text="This is your collection's information icon." style={{ color: "#fff", fontSize: 16 }} />
+        </Tooltip.Content>
+      </Tooltip.Root>
+
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.cardContainer}>
           {collections.map((collection) => {
@@ -111,7 +156,7 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
         </View>
       </GestureHandlerRootView>
 
-      {/* Erster grosser, runder Button */}
+      {/* Add Collection Button */}
       <View style={styles.roundButtonContainer}>
         <Pressable style={styles.roundButton}
           onPress={() => setIsModalVisible(true)}>
@@ -149,6 +194,7 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
 }
 
 const styles = StyleSheet.create({
+  // Your existing styles remain unchanged
   cardContainer: {
     paddingHorizontal: 10,
     marginTop: 16,
