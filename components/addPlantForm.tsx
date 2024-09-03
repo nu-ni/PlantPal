@@ -64,7 +64,6 @@ export function AddPlantForm() {
 
       <View style={styles.row}>
         <Text style={styles.label}>Plant Image:</Text>
-        
       </View>
       
       {!cameraScreenVisible && (
