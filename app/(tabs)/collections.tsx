@@ -3,7 +3,8 @@ import { PlantCollection } from "@/data/models";
 import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
-import { Link, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
+import Tooltip from 'react-native-walkthrough-tooltip';
 import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
@@ -13,26 +14,19 @@ export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
   const router = useRouter();
-  const TriggerView = Platform.OS === "web" ? View : Pressable;
-  const [open, setOpen] = useState(false);
 
   const [collections, setCollections] = useState<PlantCollection[]>([]);
 
   const fetchCollections = async () => {
     const collectionData = await fetchAllCollectionsWithPlantCount();
     setCollections(collectionData as PlantCollection[]);
-  }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
-      let isActive = true;
-
       fetchCollections();
-
-      return () => {
-        isActive = false;
-      };
     }, [])
   );
 
@@ -51,25 +45,25 @@ export default function CollectionScreen() {
     </TouchableOpacity>
   );
 
-const renderSwipeableCard = (title: string, description: string, id: string) => (
-  <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
-    <TouchableOpacity
-      style={styles.card} // Use TouchableOpacity instead of View
-      onPress={() => {
-        router.push(`/collectionDetails/${id}`);
-      }}
-    >
-      <View style={styles.cardTextContainer}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardDescription}>{description}</Text>
-      </View>
-      <Image
-        style={styles.cardAvatar}
-        source={require('@/assets/images/user-solid.png')}
-      />
-    </TouchableOpacity>
-  </Swipeable>
-);
+  const renderSwipeableCard = (title: string, description: string, id: string) => (
+    <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => {
+          router.push(`/collectionDetails/${id}`);
+        }}
+      >
+        <View style={styles.cardTextContainer}>
+          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardDescription}>{description}</Text>
+        </View>
+        <Image
+          style={styles.cardAvatar}
+          source={require('@/assets/images/user-solid.png')}
+        />
+      </TouchableOpacity>
+    </Swipeable>
+  );
 
   useEffect(() => {
     const firstTime = true;
@@ -90,76 +84,37 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
       await insertData(Tables.PLANT_COLLECTION, { title: inputValue, lastActive: new Date() });
       await fetchCollections();
     } else {
-      alert(
-        "Please enter a valid name containing at least one letter or number."
-      );
+      alert("Please enter a valid name containing at least one letter or number.");
     }
   };
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
-      {/* Tooltip Integration */}
-      <Tooltip.Root
-        {...Platform.select({
-          web: {},
-          default: {
-            open,
-            onDismiss: () => setOpen(false),
-          },
-        })}
+      {/* Tooltip Implementation */}
+      <Tooltip
+        isVisible={tooltipVisible}
+        content={<Text>Swipe left to delete a Collection</Text>}
+        placement="top"
+        onClose={() => setTooltipVisible(false)}
       >
-        <Tooltip.Trigger>
-          <TriggerView
-            {...Platform.select({
-              web: {},
-              default: {
-                onPress: () => setOpen(true),
-              },
-            })}
-          >
-            <Ionicons name="information-circle-outline" size={30} />
-          </TriggerView>
-        </Tooltip.Trigger>
-        <Tooltip.Content
-          sideOffset={3}
-          containerStyle={{
-            paddingLeft: 16,
-            paddingRight: 16,
-            paddingTop: 8,
-            paddingBottom: 8,
-          }}
-          onTap={() => {
-            setOpen(false);
-          }}
-          dismissDuration={500}
-          disableTapToDismiss
-          side="right"
-          presetAnimation="fadeIn"
-          backgroundColor="black"
-          borderRadius={12}
-        >
-          <Tooltip.Text text="This is your collection's information icon." style={{ color: "#fff", fontSize: 16 }} />
-        </Tooltip.Content>
-      </Tooltip.Root>
+        <TouchableOpacity style={styles.touchable} onPress={() => setTooltipVisible(true)}>
+          <Ionicons name="information-circle-outline" size={30} />
+        </TouchableOpacity>
+      </Tooltip>
 
+      {/* Main Content */}
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.cardContainer}>
           {collections.map((collection) => {
             const collectionId = collection.id!.toString();
-            return (
-              
-              renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
-              
-              
-            )
+            return renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId);
           })}
         </View>
       </GestureHandlerRootView>
 
       {/* Add Collection Button */}
       <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton}
-          onPress={() => setIsModalVisible(true)}>
+        <Pressable style={styles.roundButton} onPress={() => setIsModalVisible(true)}>
           <Text style={styles.roundButtonText}>+</Text>
         </Pressable>
       </View>
@@ -188,13 +143,12 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
           </View>
         </View>
       </Modal>
-
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  // Your existing styles remain unchanged
+  // Bestehende Stile bleiben unverändert
   cardContainer: {
     paddingHorizontal: 10,
     marginTop: 16,
@@ -289,5 +243,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+  },
+  touchable: {
+    padding: 10, 
+    backgroundColor: "#ddd",
+    borderRadius: 8,
   },
 });
