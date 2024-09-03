@@ -3,9 +3,9 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useState, useEffect } from 'react';
-import { PlantCollection, Plant } from '@/services/Database';
-import { getAll, createData, updateData, deleteData } from '@/services/DatabaseService';
+import { getAll, insertData, updateData, deleteData, Tables } from '@/services/DatabaseService';
 import React from 'react';
+import { PlantCollection, Plant } from '@/data/models';
 
 export default function TabTwoScreen() {
   const [collection, setCollection] = useState<PlantCollection[]>([]);
@@ -13,9 +13,9 @@ export default function TabTwoScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const collectionData = await getAll('PlantCollection');
+      const collectionData = await getAll(Tables.PLANT_COLLECTION);
       setCollection(collectionData as PlantCollection[]);
-      const fetchedPlants = await getAll('Plant');
+      const fetchedPlants = await getAll(Tables.PLANT);
       setPlants(fetchedPlants  as Plant[]);
       console.log('colllection', collection);
       console.log('plant', plants);
@@ -32,7 +32,7 @@ export default function TabTwoScreen() {
       lastActive: new Date(),
     };
 
-    await createData(tableName, data);
+    await insertData(tableName, data);
   }
 
   const addPlant = async () => {
@@ -43,9 +43,10 @@ export default function TabTwoScreen() {
       frequency: 10,
       waterAmount: 100,
       collectionId: 2,
+      image: new Blob(),
     };
 
-    await createData(tableName, data);
+    await insertData(tableName, data);
   }
 
   const deletePlant = async () => {
@@ -63,6 +64,7 @@ export default function TabTwoScreen() {
       frequency: 10,
       waterAmount: 100,
       collectionId: 2,
+      image: new Blob(),
     };
 
     await updateData(tableName, 1, data);

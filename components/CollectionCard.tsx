@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { View } from 'react-native';
 import React from 'react';
-import { PlantCollection } from '../services/Database';
+import { PlantCollection } from '../data/models';
 
 type CardProps = {
   item: PlantCollection;
@@ -30,34 +30,44 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     flexDirection: 'row',
+    overflow: 'visible',
     padding: 10,
     marginBottom: 10,
+    // TODO: fix shadwo
+    // shadowColor: '#000', 
+    // shadowOffset: { width: 0, height: 4 }, 
+    // shadowOpacity: 0.25, 
+    // shadowRadius: 3.84, 
+    // elevation: 5, 
   },
   circleContainer: {
+    marginRight: 10,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   circle: {
-    width: 20,
-    height: 20,
+    width: 13,
+    height: 13,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'grey',
   },
   circleSelected: {
-    backgroundColor: 'green',
+    backgroundColor: '#557F60',
   },
   divider: {
     width: 1,
     height: '100%',
-    backgroundColor: 'grey',
+    backgroundColor: '#b0b0b0',
   },
   titleContainer: {
     flex: 9,
     justifyContent: 'center',
+    marginVertical: 17,
   },
   title: {
-    marginLeft: 10,
+    marginRight: 13,
+    textAlign: 'right',
   },
 });
