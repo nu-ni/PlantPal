@@ -15,7 +15,7 @@ import {
   GestureHandlerRootView,
   Swipeable,
 } from "react-native-gesture-handler";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { ActionButton } from "@/components/actionButtton";
 import { AddPlantForm } from "@/components/addPlantForm";
 
@@ -23,7 +23,6 @@ export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
-  const [isFormVisible, setIsFormVisible] = useState(false);
   const router = useRouter();
 
   const handleDelete = () => {
@@ -56,10 +55,6 @@ export default function CollectionScreen() {
     setInputValue(text);
     const isValid = /[a-zA-Z0-9]/.test(text);
     setIsInputValid(isValid);
-  };
-
-  const handleButtonClick = () => {
-    setIsFormVisible(false);
   };
 
   const handleModalClose = () => {
@@ -114,12 +109,16 @@ export default function CollectionScreen() {
       <View style={styles.roundButtonContainer}>
         <Pressable
           style={styles.roundButton}
-          onPress={() => setIsFormVisible(true)}
+          onPress={() =>
+            router.push({
+              pathname: "/collectionDetails[id]",
+            })
+          }
         >
           <Text style={styles.roundButtonText}>+</Text>
         </Pressable>
       </View>
-      {isFormVisible && <AddPlantForm onButtonClick={handleButtonClick} />}
+      <Link href="/collectionDetails/1">View first user details</Link>
     </ParallaxScrollView>
   );
 }
