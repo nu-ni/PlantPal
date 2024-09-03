@@ -70,10 +70,11 @@ const updateLastActive = async (collectionId: number) => {
     return db.runAsync(query, [now, collectionId]);
 }
 
-const getLastActiveCollection = async () => {
+export const getLastActiveCollection = async () => {
     const db = await getDBConnection();
     const query = `SELECT id FROM ${Tables.PLANT_COLLECTION} ORDER BY lastActive DESC LIMIT 1;`;
-    return db.runAsync(query);
+    const collection = db.getAllAsync<PlantCollection>(query);
+    return collection;
 }
 
 export const fetchAllCollectionsWithPlantCount = async () => {

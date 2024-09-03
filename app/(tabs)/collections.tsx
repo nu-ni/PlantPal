@@ -49,20 +49,25 @@ export default function CollectionScreen() {
     </TouchableOpacity>
   );
 
-  const renderSwipeableCard = (title: string, description: string, id: string) => (
-    <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
-      <View style={styles.card}>
-        <View style={styles.cardTextContainer}>
-          <Text style={styles.cardTitle}>{title}</Text>
-          <Text style={styles.cardDescription}>{description}</Text>
-        </View>
-        <Image
-          style={styles.cardAvatar}
-          source={require('@/assets/images/user-solid.png')}
-        />
+const renderSwipeableCard = (title: string, description: string, id: string) => (
+  <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
+    <TouchableOpacity
+      style={styles.card} // Use TouchableOpacity instead of View
+      onPress={() => {
+        // do navigation
+       }}
+    >
+      <View style={styles.cardTextContainer}>
+        <Text style={styles.cardTitle}>{title}</Text>
+        <Text style={styles.cardDescription}>{description}</Text>
       </View>
-    </Swipeable>
-  );
+      <Image
+        style={styles.cardAvatar}
+        source={require('@/assets/images/user-solid.png')}
+      />
+    </TouchableOpacity>
+  </Swipeable>
+);
 
   useEffect(() => {
     const firstTime = true;
@@ -77,7 +82,6 @@ export default function CollectionScreen() {
     setIsInputValid(isValid);
   };
 
-
   const handleModalClose = async () => {
     if (isInputValid) {
       setIsModalVisible(false);
@@ -87,7 +91,6 @@ export default function CollectionScreen() {
       alert("Please enter a valid name containing at least one letter or number.");
     }
   };
-
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>

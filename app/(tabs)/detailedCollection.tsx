@@ -38,7 +38,7 @@ export default function DetailedCollectionScreen() {
   };
 
   return (
-    <ParallaxScrollView headerText={'Placeholder'}>
+    <ParallaxScrollView headerText={'placeholder'}>
       {plants.map((plant) => {
         return (
           <PlantCard
