@@ -58,7 +58,7 @@ export default function Index() {
           />
         </View>
 
-        {/* Erster großer, runder Button */}
+        {/* Erster grosser, runder Button */}
         <View style={styles.roundButtonContainer}>
         <Pressable style={styles.roundButton}
         onPress={() =>

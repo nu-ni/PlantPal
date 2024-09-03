@@ -1,10 +1,13 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Pressable } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 
 export default function CollectionScreen() {
+  const router = useRouter();
+
   const handleDelete = () => {
     console.log("almost deleted");
   };
@@ -26,6 +29,16 @@ export default function CollectionScreen() {
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
+      {/* Erster grosser, runder Button */}
+      <View style={styles.roundButtonContainer}>
+        <Pressable 
+          style={styles.roundButton} 
+          onPress={() => router.push("/detailedCollection")}
+        >
+          <Text style={styles.roundButtonText}>+</Text>
+        </Pressable>
+      </View>
+
       <Ionicons name="information-circle-outline" size={30}></Ionicons>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.cardContainer}>
@@ -76,6 +89,24 @@ const styles = StyleSheet.create({
   },
   swipeText: {
     color: "#fff",
+    fontWeight: "bold",
+  },
+  roundButtonContainer: {
+    marginLeft: 100,
+    marginTop: 0,
+    marginBottom: 20,
+  },
+  roundButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  roundButtonText: {
+    color: "black",
+    fontSize: 24,
     fontWeight: "bold",
   },
 });
