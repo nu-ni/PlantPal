@@ -29,16 +29,6 @@ export default function CollectionScreen() {
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
-      {/* Erster grosser, runder Button */}
-      <View style={styles.roundButtonContainer}>
-        <Pressable 
-          style={styles.roundButton} 
-          onPress={() => router.push("/detailedCollection")}
-        >
-          <Text style={styles.roundButtonText}>+</Text>
-        </Pressable>
-      </View>
-
       <Ionicons name="information-circle-outline" size={30}></Ionicons>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.cardContainer}>
@@ -47,6 +37,17 @@ export default function CollectionScreen() {
           {renderSwipeableCard("Büro", "2 Pflanzen")}
         </View>
       </GestureHandlerRootView>
+      {/* Erster grosser, runder Button */}
+      <View style={styles.roundButtonContainer}>
+        <Pressable style={styles.roundButton}
+        onPress={() =>
+          router.push({
+            pathname: "/detailedCollection",
+          })
+        }>
+            <Text style={styles.roundButtonText}>+</Text>
+          </Pressable>
+        </View>
     </ParallaxScrollView>
   );
 }
@@ -92,21 +93,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   roundButtonContainer: {
-    marginLeft: 100,
-    marginTop: 0,
-    marginBottom: 20,
+    marginTop: 170,
+    marginBottom: 30,
+    alignItems: 'center', 
+    justifyContent: 'center',
   },
   roundButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#66AE54',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   roundButtonText: {
-    color: "black",
-    fontSize: 24,
-    fontWeight: "bold",
+    color: 'white',
+    fontSize: 50,
+    textAlign: 'center',
+    marginBottom: 5,
   },
 });
