@@ -154,15 +154,24 @@ export function AddPlantForm() {
       )}
 
       {plantImage ? (
-        <Image
-          source={{ uri: `data:image/jpeg;base64,${plantImage}` }}
-          style={{ width: 100, height: 100 }}
-        />
+        <View>
+          <Image
+            source={{ uri: `data:image/jpeg;base64,${plantImage}` }}
+            style={{ width: 100, height: 100 }}
+          />
+          <Ionicons
+            name="close-circle"
+            size={30}
+            onPress={removeImage}
+            style={{ position: "absolute", top: 0, left: 60 }}
+          />
+        </View>
       ) : null}
-      <Button title="remove image" onPress={removeImage} />
-
       <Button title="Save" onPress={handleSubmit} />
-      <Button title="Back" onPress={() => console.log("Back button pressed")} />
+      <Button
+        title="Back"
+        onPress={() => console.log("Back button pressed")}
+      />
     </View>
   );
 }
