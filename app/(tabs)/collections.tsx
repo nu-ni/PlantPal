@@ -1,11 +1,28 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { PlantCollection } from "@/data/models";
-import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
-import React, { useState, useEffect } from 'react';
+import {
+  deleteData,
+  fetchAllCollectionsWithPlantCount,
+  insertData,
+  Tables,
+} from "@/services/DatabaseService";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, useFocusEffect } from "expo-router";
-import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
-import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Modal,
+  TextInput,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
+import {
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { ActionButton } from "@/components/actionButtton";
 
@@ -20,7 +37,7 @@ export default function CollectionScreen() {
   const fetchCollections = async () => {
     const collectionData = await fetchAllCollectionsWithPlantCount();
     setCollections(collectionData as PlantCollection[]);
-  }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -49,25 +66,29 @@ export default function CollectionScreen() {
     </TouchableOpacity>
   );
 
-const renderSwipeableCard = (title: string, description: string, id: string) => (
-  <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
-    <TouchableOpacity
-      style={styles.card} // Use TouchableOpacity instead of View
-      onPress={() => {
-        router.push(`/collectionDetails/${id}`);
-      }}
-    >
-      <View style={styles.cardTextContainer}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardDescription}>{description}</Text>
-      </View>
-      <Image
-        style={styles.cardAvatar}
-        source={require('@/assets/images/user-solid.png')}
-      />
-    </TouchableOpacity>
-  </Swipeable>
-);
+  const renderSwipeableCard = (
+    title: string,
+    description: string,
+    id: string
+  ) => (
+    <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
+      <TouchableOpacity
+        style={styles.card} // Use TouchableOpacity instead of View
+        onPress={() => {
+          router.push(`/collectionDetails/${id}`);
+        }}
+      >
+        <View style={styles.cardTextContainer}>
+          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardDescription}>{description}</Text>
+        </View>
+        <Image
+          style={styles.cardAvatar}
+          source={require("@/assets/images/user-solid.png")}
+        />
+      </TouchableOpacity>
+    </Swipeable>
+  );
 
   useEffect(() => {
     const firstTime = true;
@@ -85,7 +106,10 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
   const handleModalClose = async () => {
     if (isInputValid) {
       setIsModalVisible(false);
-      await insertData(Tables.PLANT_COLLECTION, { title: inputValue, lastActive: new Date() });
+      await insertData(Tables.PLANT_COLLECTION, {
+        title: inputValue,
+        lastActive: new Date(),
+      });
       await fetchCollections();
     } else {
       alert(
@@ -101,20 +125,21 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
         <View style={styles.cardContainer}>
           {collections.map((collection) => {
             const collectionId = collection.id!.toString();
-            return (
-              
-              renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
-              
-              
-            )
+            return renderSwipeableCard(
+              collection.title,
+              `${collection.count} Pflanzen`,
+              collectionId
+            );
           })}
         </View>
       </GestureHandlerRootView>
 
       {/* Erster grosser, runder Button */}
       <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton}
-          onPress={() => setIsModalVisible(true)}>
+        <Pressable
+          style={styles.roundButton}
+          onPress={() => setIsModalVisible(true)}
+        >
           <Text style={styles.roundButtonText}>+</Text>
         </Pressable>
       </View>
@@ -128,7 +153,9 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Enter a name for your Collection!</Text>
+            <Text style={styles.modalTitle}>
+              Enter a name for your Collection!
+            </Text>
             <TextInput
               style={styles.input}
               placeholder="f.e. Home"
@@ -143,7 +170,6 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
           </View>
         </View>
       </Modal>
-
     </ParallaxScrollView>
   );
 }

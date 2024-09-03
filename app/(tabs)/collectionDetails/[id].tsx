@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Text, Pressable, StyleSheet, View } from "react-native";
+import { Text, Pressable, StyleSheet, View, Button } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Plant } from "@/data/models";
-import { getPlantsByCollectionId } from "@/services/DatabaseService";
+import { deleteData, getPlantsByCollectionId } from "@/services/DatabaseService";
 import PlantCard from "@/components/PlantCard";
 import { useFocusEffect } from "@react-navigation/native";
 import { useLocalSearchParams } from "expo-router";
@@ -45,17 +45,28 @@ export default function DetailedCollectionScreen() {
     setIsFormVisible(!isFormVisible);
   };
 
+  const removePlant = async(id: number) => {
+    console.log('delete plant button pressed');
+    let tableName = "Plant";
+
+    await deleteData(tableName, id);
+  }
+
   return (
     <ParallaxScrollView headerText={id.toString()}>
       {!isFormVisible && (
         <>
           {plants.map((plant) => {
             return (
+              <>
               <PlantCard
                 key={plant.id}
                 item={plant}
                 onItemSelected={() => navigateToDetailPage(plant.id!)}
               />
+              <Button title="x" onPress={removePlant(plant.id!)}></Button>
+              </>
+              
             );
           })}
           <View style={styles.roundButtonContainer}>
@@ -65,6 +76,7 @@ export default function DetailedCollectionScreen() {
           </View>
         </>
       )}
+
       {isFormVisible && <AddPlantForm onButtonClick={handleButtonClick} />}
     </ParallaxScrollView>
   );
