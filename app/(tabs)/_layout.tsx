@@ -17,7 +17,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
@@ -26,7 +26,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="collections"
         options={{
-          title: 'Collections',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'menu' : 'menu-outline'} color={color} />
           ),
@@ -35,7 +35,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="detailedCollection"
         options={{
-          title: 'Detailed Collection',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'add-circle' : 'add-circle'} color={color} />
           ),
@@ -44,7 +44,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="export"
         options={{
-          title: 'Export',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'share' : 'share-outline'} color={color} />
           ),
