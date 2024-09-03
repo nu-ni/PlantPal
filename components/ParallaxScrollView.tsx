@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { StyleSheet, Text, useColorScheme } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedRef,
