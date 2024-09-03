@@ -1,11 +1,10 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { PlantCollection } from "@/data/models";
-import { deleteData, fetchAllCollectionsWithPlantCount, Tables } from "@/services/DatabaseService";
+import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
-import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { ActionButton } from "@/components/actionButtton";
@@ -41,14 +40,14 @@ export default function CollectionScreen() {
     console.log("deleted id:", collectionId);
   };
 
-const renderLeftActions = (collectionId: number) => (
-    <TouchableOpacity 
-        style={styles.swipeAction} 
-        onPress={() => handleDelete(collectionId)}
+  const renderLeftActions = (collectionId: number) => (
+    <TouchableOpacity
+      style={styles.swipeAction}
+      onPress={() => handleDelete(collectionId)}
     >
       <Text style={styles.swipeText}>Delete</Text>
     </TouchableOpacity>
-);
+  );
 
   const renderSwipeableCard = (title: string, description: string, id: string) => (
     <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
@@ -57,10 +56,10 @@ const renderLeftActions = (collectionId: number) => (
           <Text style={styles.cardTitle}>{title}</Text>
           <Text style={styles.cardDescription}>{description}</Text>
         </View>
-              <Image
-        style={styles.cardAvatar}
-        source={require('@/assets/images/user-solid.png')}
-      />
+        <Image
+          style={styles.cardAvatar}
+          source={require('@/assets/images/user-solid.png')}
+        />
       </View>
     </Swipeable>
   );
@@ -68,7 +67,7 @@ const renderLeftActions = (collectionId: number) => (
   useEffect(() => {
     const firstTime = true;
     if (firstTime) {
-      setIsModalVisible(true);
+      // setIsModalVisible(true);
     }
   }, []);
 
@@ -77,11 +76,13 @@ const renderLeftActions = (collectionId: number) => (
     const isValid = /[a-zA-Z0-9]/.test(text);
     setIsInputValid(isValid);
   };
-  
 
-  const handleModalClose = () => {
+
+  const handleModalClose = async () => {
     if (isInputValid) {
       setIsModalVisible(false);
+      await insertData(Tables.PLANT_COLLECTION, { title: inputValue, lastActive: new Date() });
+      await fetchCollections();
     } else {
       alert("Please enter a valid name containing at least one letter or number.");
     }
@@ -101,8 +102,16 @@ const renderLeftActions = (collectionId: number) => (
           })}
         </View>
       </GestureHandlerRootView>
-       {/* Popup Modal */}
 
+      {/* Erster grosser, runder Button */}
+      <View style={styles.roundButtonContainer}>
+        <Pressable style={styles.roundButton}
+          onPress={() => setIsModalVisible(true)}>
+          <Text style={styles.roundButtonText}>+</Text>
+        </Pressable>
+      </View>
+
+      {/* Popup Modal */}
       <Modal
         visible={isModalVisible}
         transparent={true}
@@ -126,18 +135,7 @@ const renderLeftActions = (collectionId: number) => (
           </View>
         </View>
       </Modal>
-      
-      {/* Erster grosser, runder Button */}
-      <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton}
-        onPress={() =>
-          router.push({
-            pathname: "/detailedCollection",
-          })
-        }>
-            <Text style={styles.roundButtonText}>+</Text>
-          </Pressable>
-        </View>
+
     </ParallaxScrollView>
   );
 }
@@ -194,9 +192,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   roundButtonContainer: {
-    marginTop: 170,
+    marginTop: 10,
     marginBottom: 30,
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
   },
   roundButton: {
