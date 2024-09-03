@@ -1,50 +1,45 @@
-# Welcome to your Expo app 👋
+# Welcome to PlantPal 🪴 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<p align="center">
+<img src="assets/images/app-in-use.png" alt="Logo" width="300"/>
+</p>
 
-## Get started
+PlantPal is your ultimate companion for plant care, ensuring that your green friends are well taken care of even when you're away. Whether you're a frequent traveler, a busy professional, or just someone who loves plants, PlantPal makes plant care effortless by allowing you to create and share customized watering schedules for each of your plants.
 
-1. Install dependencies
+## 🚀 Features
+
+- **Personalized Plant Profiles**: Easily create profiles for your plants, complete with photos and detailed watering schedules.
+- **Photo and Schedule Sharing**: Share plant care instructions with friends, family, or house sitters to ensure your plants are always in good hands.
+- **Easy Import**: Quickly import collections of plants and their schedules to save time.
+- **Flexible Photo Options**: Take a new photo or choose from your gallery when adding plants.
+- **Simple User Interface**: A user-friendly interface that makes it easy to manage and delegate plant care.
+
+## 🛠️ Get Started
+
+1. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. **Start the app**
 
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   In the output, you'll find options to open the app in a:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   - [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
+   - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+   - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+   - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
+## 🌟 Special Features
 
-When you're ready, run:
+- **Flexible Photo Options**: Choose between taking a new photo or selecting one from your gallery when adding a plant.
+- **Preview and Adjust**: Preview your photos before saving them, and make adjustments directly within the app.
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+With PlantPal, you can travel with peace of mind, knowing your plants are in safe hands!
