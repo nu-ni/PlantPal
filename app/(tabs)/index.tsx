@@ -5,6 +5,7 @@ import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 import { insertData, insertMany, getIdOfLastInsert, Tables } from '@/services/DatabaseService';
 import { Plant } from '@/data/models';
+import { router } from 'expo-router';
 
 export default function Index() {
   const handleImport = async () => {
