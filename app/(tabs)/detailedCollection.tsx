@@ -34,7 +34,6 @@ export default function DetailedCollectionScreen() {
 
   return (
     <ParallaxScrollView headerText={inputValue}>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
       <Text>Detailed Collection Page</Text>
       <AddPlantForm />
 
