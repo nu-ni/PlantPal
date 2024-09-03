@@ -1,10 +1,17 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Modal, TextInput, Button, Pressable, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
+import { ActionButton } from "@/components/actionButtton";
 
 export default function CollectionScreen() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [isInputValid, setIsInputValid] = useState(false);
+  const router = useRouter();
+
   const handleDelete = () => {
     console.log("almost deleted");
   };
@@ -24,6 +31,29 @@ export default function CollectionScreen() {
     </Swipeable>
   );
 
+  useEffect(() => {
+    const firstTime = true;
+    if (firstTime) {
+      setIsModalVisible(true);
+    }
+  }, []);
+
+  const handleInputChange = (text: string) => {
+    setInputValue(text);
+    const isValid = /[a-zA-Z0-9]/.test(text);
+    setIsInputValid(isValid);
+  };
+  
+
+  const handleModalClose = () => {
+    if (isInputValid) {
+      setIsModalVisible(false);
+    } else {
+      alert("Please enter a valid name containing at least one letter or number.");
+    }
+  };
+
+
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
       <Ionicons name="information-circle-outline" size={30}></Ionicons>
@@ -34,6 +64,43 @@ export default function CollectionScreen() {
           {renderSwipeableCard("Büro", "2 Pflanzen")}
         </View>
       </GestureHandlerRootView>
+       {/* Popup Modal */}
+
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={handleModalClose}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Enter a name for your first Collection!</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="f.e. Home"
+              value={inputValue}
+              onChangeText={handleInputChange}
+            />
+            <ActionButton
+              title="Submit"
+              onPress={handleModalClose}
+              disabled={!isInputValid}
+            />
+          </View>
+        </View>
+      </Modal>
+      
+      {/* Erster grosser, runder Button */}
+      <View style={styles.roundButtonContainer}>
+        <Pressable style={styles.roundButton}
+        onPress={() =>
+          router.push({
+            pathname: "/detailedCollection",
+          })
+        }>
+            <Text style={styles.roundButtonText}>+</Text>
+          </Pressable>
+        </View>
     </ParallaxScrollView>
   );
 }
@@ -78,4 +145,49 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+  roundButtonContainer: {
+    marginTop: 170,
+    marginBottom: 30,
+    alignItems: 'center', 
+    justifyContent: 'center',
+  },
+  roundButton: {
+    backgroundColor: '#66AE54',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roundButtonText: {
+    color: 'white',
+    fontSize: 50,
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 20,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  }
 });

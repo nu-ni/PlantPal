@@ -5,6 +5,7 @@ import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 import { insertData, insertMany, getIdOfLastInsert, Tables } from '@/services/DatabaseService';
 import { Plant } from '@/data/models';
+import { router } from 'expo-router';
 
 export default function Index() {
   const handleImport = async () => {
@@ -57,12 +58,12 @@ export default function Index() {
           />
         </View>
 
-        {/* Erster großer, runder Button */}
+        {/* Erster grosser, runder Button */}
         <View style={styles.roundButtonContainer}>
         <Pressable style={styles.roundButton}
         onPress={() =>
           router.push({
-            pathname: "/detailedCollection",
+            pathname: "/collections",
           })
         }>
             <Text style={styles.roundButtonText}>+</Text>

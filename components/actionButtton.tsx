@@ -1,18 +1,19 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
-
+// props interface
 interface ActionButtonProps {
   title: string;
   onPress: () => void;
-  disabled: boolean;
+  disabled?: boolean;
+  style?: object;
 }
 
-export function ActionButton({ title, onPress, disabled }: ActionButtonProps) {
+export function ActionButton({ title, onPress, disabled = false, style }: ActionButtonProps) {
   return (
     <View>
       <Pressable
-        style={[styles.button, disabled && styles.buttonDisabled]}
+        style={[styles.button, style, disabled && styles.buttonDisabled]} // Apply custom styles here
         onPress={onPress}
         disabled={disabled}
       >
