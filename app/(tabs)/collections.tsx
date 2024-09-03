@@ -1,15 +1,29 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, StyleSheet, Modal, TextInput, Button, Pressable, TouchableOpacity } from 'react-native';
-import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TextInput,
+  Button,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
+import {
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { ActionButton } from "@/components/actionButtton";
+import { AddPlantForm } from "@/components/addPlantForm";
 
 export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
+  const [isFormVisible, setIsFormVisible] = useState(false);
   const router = useRouter();
 
   const handleDelete = () => {
@@ -43,16 +57,20 @@ export default function CollectionScreen() {
     const isValid = /[a-zA-Z0-9]/.test(text);
     setIsInputValid(isValid);
   };
-  
+
+  const handleButtonClick = () => {
+    setIsFormVisible(false);
+  };
 
   const handleModalClose = () => {
     if (isInputValid) {
       setIsModalVisible(false);
     } else {
-      alert("Please enter a valid name containing at least one letter or number.");
+      alert(
+        "Please enter a valid name containing at least one letter or number."
+      );
     }
   };
-
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
@@ -64,7 +82,7 @@ export default function CollectionScreen() {
           {renderSwipeableCard("Büro", "2 Pflanzen")}
         </View>
       </GestureHandlerRootView>
-       {/* Popup Modal */}
+      {/* Popup Modal */}
 
       <Modal
         visible={isModalVisible}
@@ -74,7 +92,9 @@ export default function CollectionScreen() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Enter a name for your first Collection!</Text>
+            <Text style={styles.modalTitle}>
+              Enter a name for your first Collection!
+            </Text>
             <TextInput
               style={styles.input}
               placeholder="f.e. Home"
@@ -89,18 +109,17 @@ export default function CollectionScreen() {
           </View>
         </View>
       </Modal>
-      
+
       {/* Erster grosser, runder Button */}
       <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton}
-        onPress={() =>
-          router.push({
-            pathname: "/detailedCollection",
-          })
-        }>
-            <Text style={styles.roundButtonText}>+</Text>
-          </Pressable>
-        </View>
+        <Pressable
+          style={styles.roundButton}
+          onPress={() => setIsFormVisible(true)}
+        >
+          <Text style={styles.roundButtonText}>+</Text>
+        </Pressable>
+      </View>
+      {isFormVisible && <AddPlantForm onButtonClick={handleButtonClick} />}
     </ParallaxScrollView>
   );
 }
@@ -137,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF3B30",
     justifyContent: "center",
     alignItems: "center",
-    width: 80, 
+    width: 80,
     borderRadius: 8,
     marginBottom: 16,
   },
@@ -148,46 +167,46 @@ const styles = StyleSheet.create({
   roundButtonContainer: {
     marginTop: 170,
     marginBottom: 30,
-    alignItems: 'center', 
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   roundButton: {
-    backgroundColor: '#66AE54',
+    backgroundColor: "#66AE54",
     width: 100,
     height: 100,
     borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   roundButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 50,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 5,
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
     width: 300,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 20,
     marginBottom: 20,
   },
   input: {
-    width: '100%',
+    width: "100%",
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
-  }
+  },
 });
