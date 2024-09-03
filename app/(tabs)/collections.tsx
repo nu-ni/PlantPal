@@ -120,7 +120,7 @@ export default function CollectionScreen() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Enter a name for your first Collection!</Text>
+            <Text style={styles.modalTitle}>Enter a name for your Collection!</Text>
             <TextInput
               style={styles.input}
               placeholder="f.e. Home"
