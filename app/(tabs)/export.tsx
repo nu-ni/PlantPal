@@ -8,17 +8,28 @@ import * as Sharing from 'expo-sharing';
 import { PlantCollection } from '@/data/models';
 import { Errors } from '@/Errors/error-messages';
 import { Pressable } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ExportScreen() {
   const [collections, setCollections] = useState<PlantCollection[]>([]);
   const [selectedId, setSelectedId] = useState<number | undefined>(1);
 
-  useEffect(() => {
-    (async () => {
-      const result = await getAll(Tables.PLANT_COLLECTION);
-      setCollections(result as PlantCollection[]);
-    })();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      fetchCollections();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  const fetchCollections = async () => {
+    const result = await getAll(Tables.PLANT_COLLECTION);
+    setCollections(result as PlantCollection[]);
+  }
 
   const generateJsonFile = async () => {
     if (!selectedId) {
@@ -48,7 +59,7 @@ export default function ExportScreen() {
 
       return fileUri
     } catch (error) {
-      console.log(Errors.shareFileError, error);
+      console.log(Errors.saveFileError, error);
     }
   };
 
@@ -60,7 +71,7 @@ export default function ExportScreen() {
 
       await Sharing.shareAsync(fileUri);
     } catch (error) {
-      console.log(Errors.saveFileError, error);
+      console.log(Errors.shareFileError, error);
     }
   };
 
@@ -77,12 +88,12 @@ export default function ExportScreen() {
         )
       })}
       <View style={styles.ButtonContainer}>
-          <Pressable
-            style={styles.Button}
-            onPress={handleExportAndShare}>
-            <Text style={styles.buttonText}>Share</Text>
-          </Pressable>
-        </View>
+        <Pressable
+          style={styles.Button}
+          onPress={handleExportAndShare}>
+          <Text style={styles.buttonText}>Share</Text>
+        </Pressable>
+      </View>
     </ParallaxScrollView>
   );
 }
@@ -94,16 +105,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   Button: {
-  backgroundColor: "white",
-  width: "80%",
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 20,
-  borderRadius: 25,
+    backgroundColor: "white",
+    width: "80%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    borderRadius: 25,
   },
   buttonText: {
-  color: "black",
-  fontSize: 20
+    color: "black",
+    fontSize: 20
   }
 });
 
