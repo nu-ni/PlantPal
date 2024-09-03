@@ -38,6 +38,14 @@ const styles = StyleSheet.create({
     overflow: 'visible',
     padding: 10,
     marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.45,
+    shadowRadius: 4.84,
+    elevation: 5,
   },
   titleContainer: {
     flex: 9,

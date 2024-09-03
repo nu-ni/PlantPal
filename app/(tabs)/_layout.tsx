@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-
+import { Image } from 'react-native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -36,8 +36,15 @@ export default function TabLayout() {
         name="detailedCollection"
         options={{
           title: '',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'add-circle' : 'add-circle'} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={require('@/assets/images/seedling-solid.png')}
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: focused ? 'orange' : 'grey'
+              }}
+            />
           ),
         }}
       />

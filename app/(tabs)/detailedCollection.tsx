@@ -13,7 +13,7 @@ export default function DetailedCollectionScreen() {
     React.useCallback(() => {
       let isActive = true;
 
-      fetchPlants(isActive );
+      fetchPlants(isActive);
 
       return () => {
         isActive = false;
@@ -97,15 +97,25 @@ const styles = StyleSheet.create({
   },
   roundButton: {
     backgroundColor: '#66AE54',
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
     display: 'flex',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.45,
+    shadowRadius: 4.84,
+    elevation: 5,
   },
   roundButtonText: {
     top: '-10%',
     color: 'white',
-    fontSize: 40,
+    fontSize: 50,
     textAlign: 'center',
   },
 });

@@ -6,14 +6,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
 import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
-import { useRouter } from "expo-router";
 import { ActionButton } from "@/components/actionButtton";
 
 export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isInputValid, setIsInputValid] = useState(false);
-  const router = useRouter();
 
   const [collections, setCollections] = useState<PlantCollection[]>([]);
 
@@ -147,6 +145,14 @@ const styles = StyleSheet.create({
   cardContainer: {
     paddingHorizontal: 10,
     marginTop: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.45,
+    shadowRadius: 4.84,
+    elevation: 5,
   },
   card: {
     backgroundColor: "#fff",
@@ -195,24 +201,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   roundButtonContainer: {
-    marginTop: 10,
     marginBottom: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
   roundButton: {
     backgroundColor: '#66AE54',
-    width: 100,
-    height: 100,
+    width: 60,
+    height: 60,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.45,
+    shadowRadius: 4.84,
+    elevation: 5,
   },
   roundButtonText: {
     color: 'white',
+    top: '-10%',
     fontSize: 50,
     textAlign: 'center',
-    marginBottom: 5,
   },
   modalContainer: {
     flex: 1,
