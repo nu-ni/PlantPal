@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { CameraType, CameraView } from "expo-camera";
@@ -18,7 +19,7 @@ export function AddPlantForm() {
   const [plantName, setPlantName] = useState<string>("");
   const [timesPerWeek, setTimesPerWeek] = useState<number>(0);
   const [amount, setAmount] = useState<number>(0);
-  const [plantImage, setPlantImage] = useState<string>(""); // Store Base64 image string
+  const [plantImage, setPlantImage] = useState<string>("");
   const [cameraScreenVisible, setCameraScreenVisible] =
     useState<boolean>(false);
   const [facing, setFacing] = useState<CameraType>("back");
@@ -76,17 +77,27 @@ export function AddPlantForm() {
   };
 
   const handleSubmit = async () => {
+    // some very basic input validation
+    if (plantName.trim() === "") {
+      Alert.alert("Validation Error", "Plant Name cannot be empty.");
+      return;
+    }
+    if (plantImage.trim() === "") {
+      Alert.alert("Validation Error", "Please add an image of the plant.");
+      return;
+    }
+
     let tableName = "Plant";
     let data: Plant = {
       title: plantName,
       frequency: timesPerWeek,
       waterAmount: amount,
+      // TODO: fetch collectionId of current collection
       collectionId: 2,
       image: plantImage,
     };
 
     await insertData(tableName, data);
-    console.log("inserted", data);
   };
 
   return (
