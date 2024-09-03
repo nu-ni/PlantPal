@@ -10,6 +10,7 @@ export type Plant = {
     frequency: number;
     waterAmount: number;
     collectionId: number;
+    image: Blob;
 };
 
 export type Dict = {
