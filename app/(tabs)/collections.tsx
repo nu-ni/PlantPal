@@ -1,7 +1,10 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { PlantCollection } from "@/data/models";
+import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, StyleSheet, Modal, TextInput, Button, Pressable, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from "expo-router";
+import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { ActionButton } from "@/components/actionButtton";
@@ -12,29 +15,64 @@ export default function CollectionScreen() {
   const [isInputValid, setIsInputValid] = useState(false);
   const router = useRouter();
 
-  const handleDelete = () => {
-    console.log("almost deleted");
+  const [collections, setCollections] = useState<PlantCollection[]>([]);
+
+  const fetchCollections = async () => {
+    const collectionData = await fetchAllCollectionsWithPlantCount();
+    setCollections(collectionData as PlantCollection[]);
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      fetchCollections();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  const handleDelete = async (collectionId: number) => {
+    await deleteData(Tables.PLANT_COLLECTION, collectionId);
+    await fetchCollections();
+    console.log("deleted id:", collectionId);
   };
 
-  const renderLeftActions = () => (
-    <TouchableOpacity style={styles.swipeAction} onPress={handleDelete}>
+  const renderLeftActions = (collectionId: number) => (
+    <TouchableOpacity
+      style={styles.swipeAction}
+      onPress={() => handleDelete(collectionId)}
+    >
       <Text style={styles.swipeText}>Delete</Text>
     </TouchableOpacity>
   );
 
-  const renderSwipeableCard = (title: string, description: string) => (
-    <Swipeable renderRightActions={renderLeftActions}>
-      <View style={styles.card}>
+const renderSwipeableCard = (title: string, description: string, id: string) => (
+  <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
+    <TouchableOpacity
+      style={styles.card} // Use TouchableOpacity instead of View
+      onPress={() => {
+        // do navigation
+       }}
+    >
+      <View style={styles.cardTextContainer}>
         <Text style={styles.cardTitle}>{title}</Text>
         <Text style={styles.cardDescription}>{description}</Text>
       </View>
-    </Swipeable>
-  );
+      <Image
+        style={styles.cardAvatar}
+        source={require('@/assets/images/user-solid.png')}
+      />
+    </TouchableOpacity>
+  </Swipeable>
+);
 
   useEffect(() => {
     const firstTime = true;
     if (firstTime) {
-      setIsModalVisible(true);
+      // setIsModalVisible(true);
     }
   }, []);
 
@@ -43,29 +81,40 @@ export default function CollectionScreen() {
     const isValid = /[a-zA-Z0-9]/.test(text);
     setIsInputValid(isValid);
   };
-  
 
-  const handleModalClose = () => {
+  const handleModalClose = async () => {
     if (isInputValid) {
       setIsModalVisible(false);
+      await insertData(Tables.PLANT_COLLECTION, { title: inputValue, lastActive: new Date() });
+      await fetchCollections();
     } else {
       alert("Please enter a valid name containing at least one letter or number.");
     }
   };
-
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
       <Ionicons name="information-circle-outline" size={30}></Ionicons>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.cardContainer}>
-          {renderSwipeableCard("Zuhause", "12 Pflanzen")}
-          {renderSwipeableCard("Müllers", "4 Pflanzen")}
-          {renderSwipeableCard("Büro", "2 Pflanzen")}
+          {collections.map((collection) => {
+            const collectionId = collection.id!.toString();
+            return (
+              renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
+            )
+          })}
         </View>
       </GestureHandlerRootView>
-       {/* Popup Modal */}
 
+      {/* Erster grosser, runder Button */}
+      <View style={styles.roundButtonContainer}>
+        <Pressable style={styles.roundButton}
+          onPress={() => setIsModalVisible(true)}>
+          <Text style={styles.roundButtonText}>+</Text>
+        </Pressable>
+      </View>
+
+      {/* Popup Modal */}
       <Modal
         visible={isModalVisible}
         transparent={true}
@@ -74,7 +123,7 @@ export default function CollectionScreen() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Enter a name for your first Collection!</Text>
+            <Text style={styles.modalTitle}>Enter a name for your Collection!</Text>
             <TextInput
               style={styles.input}
               placeholder="f.e. Home"
@@ -89,18 +138,7 @@ export default function CollectionScreen() {
           </View>
         </View>
       </Modal>
-      
-      {/* Erster grosser, runder Button */}
-      <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton}
-        onPress={() =>
-          router.push({
-            pathname: "/detailedCollection",
-          })
-        }>
-            <Text style={styles.roundButtonText}>+</Text>
-          </Pressable>
-        </View>
+
     </ParallaxScrollView>
   );
 }
@@ -113,7 +151,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    padding: 16,
+    padding: 17,
     marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -125,19 +163,22 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
+    marginTop: 6,
+    marginLeft: 10,
     fontWeight: "bold",
-    marginBottom: 8,
+    marginBottom: 2,
     flex: 1,
   },
   cardDescription: {
+    marginLeft: 10,
     fontSize: 14,
-    marginBottom: 12,
+    marginBottom: 28,
   },
   swipeAction: {
     backgroundColor: "#FF3B30",
     justifyContent: "center",
     alignItems: "center",
-    width: 80, 
+    width: 80,
     borderRadius: 8,
     marginBottom: 16,
   },
@@ -145,10 +186,18 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+  cardAvatar: {
+    width: 65,
+    height: 75,
+    opacity: 0.7,
+  },
+  cardTextContainer: {
+    flex: 1,
+  },
   roundButtonContainer: {
-    marginTop: 170,
+    marginTop: 10,
     marginBottom: 30,
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
   },
   roundButton: {

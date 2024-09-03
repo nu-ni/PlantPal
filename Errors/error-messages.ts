@@ -9,4 +9,3 @@ export const Errors = {
     saveFileError: 'Error saving file to device:',
     initializeDatabaseError: 'Error initializing database:',
 }
-

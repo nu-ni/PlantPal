@@ -11,12 +11,20 @@ export default function TabTwoScreen() {
   const [collection, setCollection] = useState<PlantCollection[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
 
+  const fetchCollections = async () => {
+    const collectionData = await getAll(Tables.PLANT_COLLECTION);
+    setCollection(collectionData as PlantCollection[]);
+  }
+
+  const fetchPlants = async () => {
+    const fetchedPlants = await getAll(Tables.PLANT);
+    setPlants(fetchedPlants as Plant[]);
+  }
+
   useEffect(() => {
     const fetchData = async () => {
-      const collectionData = await getAll(Tables.PLANT_COLLECTION);
-      setCollection(collectionData as PlantCollection[]);
-      const fetchedPlants = await getAll(Tables.PLANT);
-      setPlants(fetchedPlants  as Plant[]);
+      await fetchCollections();
+      await fetchPlants();
       console.log('colllection', collection);
       console.log('plant', plants);
     }
@@ -43,7 +51,7 @@ export default function TabTwoScreen() {
       frequency: 10,
       waterAmount: 100,
       collectionId: 2,
-      image: new Blob(),
+      image: '',
     };
 
     await insertData(tableName, data);
@@ -64,7 +72,7 @@ export default function TabTwoScreen() {
       frequency: 10,
       waterAmount: 100,
       collectionId: 2,
-      image: new Blob(),
+      image: '',
     };
 
     await updateData(tableName, 1, data);

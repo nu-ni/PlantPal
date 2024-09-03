@@ -27,7 +27,7 @@ export default function ExportScreen() {
     }
 
     const selectedCollection = collections.find(c => c.id === selectedId);
-    const relatedPlants = await getPlantsByCollectionId(Tables.PLANT, selectedId);
+    const relatedPlants = await getPlantsByCollectionId(selectedId);
 
     const dataToExport = {
       collection: selectedCollection,
