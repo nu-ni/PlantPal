@@ -1,37 +1,103 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
-import CameraScreen from "./CameraScreen";
+import React, { useRef, useState } from "react";
+import {
+  View,
+  TextInput,
+  Button,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { CameraType, CameraView } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
+import { insertData } from "@/services/DatabaseService";
+import { Plant } from "@/data/models";
 
 export function AddPlantForm() {
-  const [plantName, setPlantName] = useState("");
-  const [timesPerWeek, setTimesPerWeek] = useState("");
-  const [plantImage, setPlantImage] = useState("");
-  const [amount, setAmount] = useState("");
-  const [cameraScreenVisible, setCameraScreenVisible] = useState(false); // Correct state management
+  const [plantName, setPlantName] = useState<string>("");
+  const [timesPerWeek, setTimesPerWeek] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(0);
+  const [plantImage, setPlantImage] = useState<string>("");
+  const [cameraScreenVisible, setCameraScreenVisible] =
+    useState<boolean>(false);
+  const [facing, setFacing] = useState<CameraType>("back");
+  const cameraRef = useRef<CameraView>(null);
 
   const handlePlantNameChange = (text: string) => {
     setPlantName(text);
   };
 
   const handleTimesPerWeekChange = (text: string) => {
-    setTimesPerWeek(text);
-  };
-
-  const handlePlantImageChange = (text: string) => {
-    setPlantImage(text);
+    setTimesPerWeek(Number(text)); // Convert string to number
   };
 
   const handleAmountChange = (text: string) => {
-    setAmount(text);
-  };
-
-  const handleSubmit = () => {
-    console.log("submitted");
+    setAmount(Number(text)); // Convert string to number
   };
 
   const handleCameraIconClick = () => {
     setCameraScreenVisible((prevState) => !prevState);
+  };
+
+  const toggleCameraFacing = () => {
+    setFacing((current) => (current === "back" ? "front" : "back"));
+  };
+
+  const takePhoto = async () => {
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync({ base64: true });
+      const base64String = photo.base64 || "";
+      setPlantImage(base64String);
+      console.log(base64String);
+    }
+    setCameraScreenVisible(false);
+  };
+
+  const selectImageFromGallery = async () => {
+    
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      // here you can do editable: 
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+    console.log(result);
+    
+    if (!result.canceled && result.assets[0].base64) {
+      setPlantImage(result.assets[0].base64);
+      console.log(plantImage);
+    }
+  };
+
+  const removeImage = () => {
+    setPlantImage("");
+  };
+
+  const handleSubmit = async () => {
+    // some very basic input validation
+    if (plantName.trim() === "") {
+      Alert.alert("Validation Error", "Plant Name cannot be empty.");
+      return;
+    }
+    if (plantImage.trim() === "") {
+      Alert.alert("Validation Error", "Please add an image of the plant.");
+      return;
+    }
+
+    let tableName = "Plant";
+    let data: Plant = {
+      title: plantName,
+      frequency: timesPerWeek,
+      waterAmount: amount,
+      // TODO: fetch collectionId of current collection
+      collectionId: 2,
+      image: plantImage,
+    };
+
+    await insertData(tableName, data);
   };
 
   return (
@@ -48,8 +114,9 @@ export function AddPlantForm() {
         <Text style={styles.label}>Times Per Week:</Text>
         <TextInput
           style={styles.input}
-          value={timesPerWeek}
+          value={timesPerWeek.toString()}
           onChangeText={handleTimesPerWeekChange}
+          keyboardType="numeric"
         />
       </View>
 
@@ -57,27 +124,65 @@ export function AddPlantForm() {
         <Text style={styles.label}>Amount:</Text>
         <TextInput
           style={styles.input}
-          value={amount}
+          value={amount.toString()}
           onChangeText={handleAmountChange}
+          keyboardType="numeric"
         />
       </View>
 
       <View style={styles.row}>
         <Text style={styles.label}>Plant Image:</Text>
       </View>
-      
+
       {!cameraScreenVisible && (
-        <Ionicons name="camera" size={30} onPress={handleCameraIconClick} />
+        <View style={styles.iconContainer}>
+          <Ionicons name="camera" size={30} onPress={handleCameraIconClick} />
+          <TouchableOpacity onPress={selectImageFromGallery}>
+            <Ionicons name="image" size={30} />
+          </TouchableOpacity>
+        </View>
       )}
-      
+
       {cameraScreenVisible && (
         <View>
           <Ionicons name="close" size={30} onPress={handleCameraIconClick} />
-          <CameraScreen />
+          <View style={styles.container}>
+            <CameraView ref={cameraRef} style={styles.camera} facing={facing}>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={toggleCameraFacing}
+                >
+                  <Text style={styles.text}>Flip Camera</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={takePhoto}>
+                  <Text style={styles.text}>Take Photo</Text>
+                </TouchableOpacity>
+              </View>
+            </CameraView>
+          </View>
         </View>
       )}
+
+      {plantImage ? (
+        <View>
+          <Image
+            source={{ uri: `data:image/jpeg;base64,${plantImage}` }}
+            style={{ width: 100, height: 100 }}
+          />
+          <Ionicons
+            name="close-circle"
+            size={30}
+            onPress={removeImage}
+            style={{ position: "absolute", top: 0, left: 60 }}
+          />
+        </View>
+      ) : null}
       <Button title="Save" onPress={handleSubmit} />
-      <Button title="Back" onPress={handleSubmit} />
+      <Button
+        title="Back"
+        onPress={() => console.log("Back button pressed")}
+      />
     </View>
   );
 }
@@ -102,5 +207,33 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "transparent",
+    margin: 64,
+  },
+  button: {
+    flex: 1,
+    alignSelf: "flex-end",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+  },
+  iconContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginVertical: 10,
   },
 });

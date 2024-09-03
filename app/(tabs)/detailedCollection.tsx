@@ -10,8 +10,9 @@ export default function DetailedCollection() {
     <ParallaxScrollView headerText={inputValue}>
       <View style={styles.titleContainer}>
         <Text>Detailed Collection Page</Text>
-        <AddPlantForm />
+        
       </View>
+      <AddPlantForm />
     </ParallaxScrollView>
   );
 }
