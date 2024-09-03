@@ -11,12 +11,20 @@ export default function TabTwoScreen() {
   const [collection, setCollection] = useState<PlantCollection[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchCollections = async () => {
       const collectionData = await getAll(Tables.PLANT_COLLECTION);
       setCollection(collectionData as PlantCollection[]);
+  }
+
+  const fetchPlants = async () => {
       const fetchedPlants = await getAll(Tables.PLANT);
       setPlants(fetchedPlants  as Plant[]);
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchCollections ();
+      await fetchPlants();
       console.log('colllection', collection);
       console.log('plant', plants);
     }

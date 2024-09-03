@@ -1,70 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TextInput, Button } from 'react-native';
-import { AddPlantForm } from '@/components/addPlantForm';
+import { Text, Pressable, StyleSheet, View } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { ActionButton } from '@/components/actionButtton';
+import { Plant } from '@/data/models';
+import { getPlantsByCollectionId } from '@/services/DatabaseService';
+import PlantCard from '@/components/PlantCard';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function DetailedCollectionScreen() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [isInputValid, setIsInputValid] = useState(false);
+  const [plants, setPlants] = useState<Plant[]>([]);
 
-  useEffect(() => {
-    const firstTime = true;
-    if (firstTime) {
-      setIsModalVisible(true);
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      fetchPlants(isActive );
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  const fetchPlants = async (isActive: boolean) => {
+    const result = await getPlantsByCollectionId(2);
+    if (!result) {
+      console.log('No plants found');
+      return;
     }
-  }, []);
 
-  const handleInputChange = (text) => {
-    setInputValue(text);
-    const isValid = /[a-zA-Z0-9]/.test(text);
-    setIsInputValid(isValid);
-  };
-
-  const handleModalClose = () => {
-    if (isInputValid) {
-      setIsModalVisible(false);
-    } else {
-      alert("Please enter a valid name containing at least one letter or number.");
+    if (isActive) {
+      setPlants(result as Plant[]);
     }
+  }
+
+  const navigateToDetailPage = (id: number) => {
+    console.log('Navigate to detail page with id: ', id);
   };
 
   return (
-    <ParallaxScrollView headerText={inputValue}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Text>Detailed Collection Page</Text>
-      <AddPlantForm />
-
-      {/* Popup Modal */}
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={handleModalClose}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Enter a name for your first Collection!</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="f.e. Home"
-              value={inputValue}
-              onChangeText={handleInputChange}
-            />
-            <ActionButton
-              title="Submit"
-              onPress={handleModalClose}
-              disabled={!isInputValid}
-            />
-          </View>
-        </View>
-      </Modal>
+    <ParallaxScrollView headerText={'Placeholder'}>
+      {plants.map((plant) => {
+        return (
+          <PlantCard
+            key={plant.id}
+            item={plant}
+            onItemSelected={() => navigateToDetailPage(plant.id!)}
+          />
+        )
+      })}
+      <View style={styles.roundButtonContainer}>
+        <Pressable
+          style={styles.roundButton}
+          onPress={() => console.log("Hier sollte ein Modal sein.")}
+        >
+          <Text style={styles.roundButtonText}>+</Text>
+        </Pressable>
+      </View>
     </ParallaxScrollView>
   );
 }
@@ -98,5 +89,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+  },
+  roundButtonContainer: {
+    marginBottom: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roundButton: {
+    backgroundColor: '#66AE54',
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    display: 'flex',
+  },
+  roundButtonText: {
+    top: '-10%',
+    color: 'white',
+    fontSize: 40,
+    textAlign: 'center',
   },
 });

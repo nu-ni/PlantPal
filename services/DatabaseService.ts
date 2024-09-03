@@ -55,6 +55,39 @@ const initializeDatabase = async (db: SQLiteDatabase) => {
     }
 };
 
+export const checkHasCollection = async () => {
+    const db = await openDatabaseAsync('plant-pal.sqlite');
+    let checkQuery =
+        `SELECT name FROM sqlite_master WHERE type='table' AND name='${Tables.PLANT_COLLECTION}';`;
+    let results = await db.getAllAsync(checkQuery);
+    return results.length > 0;
+}
+
+const updateLastActive = async (collectionId: number) => {
+    const db = await getDBConnection();
+    const query = `UPDATE ${Tables.PLANT_COLLECTION} SET lastActive = ? WHERE id = ?;`;
+    const now = Date.now();
+    return db.runAsync(query, [now, collectionId]);
+}
+
+const getLastActiveCollection = async () => {
+    const db = await getDBConnection();
+    const query = `SELECT id FROM ${Tables.PLANT_COLLECTION} ORDER BY lastActive DESC LIMIT 1;`;
+    return db.runAsync(query);
+}
+
+export const fetchAllCollectionsWithPlantCount = async () => {
+  const db = await getDBConnection();
+
+  const query = `
+    SELECT PlantCollection.*, (SELECT COUNT(*) FROM ${Tables.PLANT} WHERE ${Tables.PLANT}.collectionId = PlantCollection.id) AS count
+    FROM ${Tables.PLANT_COLLECTION}
+    `;
+  
+  return await db.getAllAsync(query);
+}
+
+
 export const insertData =
     async (tableName: string, data: Plant | PlantCollection) => {
         const db = await getDBConnection();
@@ -121,16 +154,22 @@ export const getById = async (tableName: string, id: number) => {
 };
 
 export const getPlantsByCollectionId =
-    async (tableName: string, collectionId: number) => {
+    async (collectionId: number) => {
         const db = await getDBConnection();
 
         try {
-            const query = `SELECT * FROM ${tableName} WHERE id = ?;`;
-            return await db.runAsync(query, [collectionId]);
+            const query = `SELECT * FROM ${Tables.PLANT} WHERE collectionId = ?;`;
+            return await db.getAllAsync(query, [collectionId]);
         } catch (err) {
             console.log(Errors.fetchByIdError, err);
         }
     };
+
+export const getNumberOfPlantsByCollectionId = async (collectionId: number) => {
+    const plants = await getPlantsByCollectionId(collectionId);
+    return plants ? plants.length : 0;
+}
+
 
 
 export const updateData = async (tableName: string, id: number, data: Plant | PlantCollection) => {
