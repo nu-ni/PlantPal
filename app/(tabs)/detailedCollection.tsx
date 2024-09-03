@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TextInput, Button } from 'react-native';
 import { AddPlantForm } from '@/components/addPlantForm';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { ActionButton } from '@/components/actionButtton';
 
 export default function DetailedCollectionScreen() {
@@ -18,11 +16,12 @@ export default function DetailedCollectionScreen() {
     }
   }, []);
 
-  const handleInputChange = (text) => {
+  const handleInputChange = (text: string) => {
     setInputValue(text);
     const isValid = /[a-zA-Z0-9]/.test(text);
     setIsInputValid(isValid);
   };
+  
 
   const handleModalClose = () => {
     if (isInputValid) {
