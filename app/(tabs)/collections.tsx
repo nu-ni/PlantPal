@@ -26,7 +26,6 @@ import {
   Swipeable,
 } from "react-native-gesture-handler";
 import { ActionButton } from "@/components/actionButtton";
-import { Button } from "react-native-paper";
 
 export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -50,7 +49,6 @@ export default function CollectionScreen() {
   const handleDelete = async (collectionId: number) => {
     await deleteData(Tables.PLANT_COLLECTION, collectionId);
     await fetchCollections();
-    console.log("deleted id:", collectionId);
   };
 
   const renderLeftActions = (collectionId: number) => (
@@ -74,11 +72,7 @@ export default function CollectionScreen() {
       <TouchableOpacity
         style={styles.card}
         onPress={async () => {
-          const lastActive = await getLastActiveCollection();
-          console.log('current lastActiveCollection', lastActive);
           await updateLastActive(Number(id))
-          const lastActive1 = await getLastActiveCollection();
-          console.log('after collection was updated', lastActive1);
           router.push(`/collectionDetails/${id}`);
         }}
       >

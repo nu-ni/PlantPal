@@ -162,6 +162,14 @@ export const getPlantsByCollectionId = async (collectionId: number) => {
   });
 };
 
+export const getCollectionTitleFromCollectionId = async (collectionId: number) => {
+    return await performDatabaseOperation(async (db) => {
+        const query = `SELECT title FROM ${Tables.PLANT_COLLECTION} WHERE id = ?;`;
+        const result: PlantCollection[] = await db.getAllSync(query, [collectionId]);
+        return result ? result[0].title : null;
+    });
+};
+
 export const getNumberOfPlantsByCollectionId = async (collectionId: number) => {
   return await performDatabaseOperation(async (db) => {
     const plants = await getPlantsByCollectionId(collectionId);

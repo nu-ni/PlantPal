@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   Pressable,
@@ -11,6 +11,7 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Plant } from "@/data/models";
 import {
   deleteData,
+  getCollectionTitleFromCollectionId,
   getLastActiveCollection,
   getPlantsByCollectionId,
   Tables,
@@ -27,6 +28,7 @@ export default function DetailedCollectionScreen() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [isFormVisible, setIsFormVisible] = useState<boolean>(false);
   const { id } = useLocalSearchParams();
+  const [collectionTitle, setCollectionTitle] = useState<string>('');
 
   useFocusEffect(
     React.useCallback(() => {
@@ -35,16 +37,13 @@ export default function DetailedCollectionScreen() {
 
     }, [])
   );
-  // here you could remove is act
+  
 
   const fetchPlants = async () => {
     const lastActive = await getLastActiveCollection();
-    if (lastActive) {
-      console.log('after fetching plants', lastActive);
-    }
-    console.log('last active outside of if', lastActive);
-    
     const result = await getPlantsByCollectionId(lastActive[0].id);
+    const title = await getCollectionTitleFromCollectionId(lastActive[0].id)
+    setCollectionTitle(title);    
     
     if (!result) {
       console.log("No plants found");
@@ -104,8 +103,9 @@ export default function DetailedCollectionScreen() {
     </Swipeable>
   );
   
+
   return (
-    <ParallaxScrollView headerText={id?.toString() || "loading"}>
+    <ParallaxScrollView headerText={collectionTitle || "loading"}>
       {!isFormVisible && (
         <>
           <GestureHandlerRootView style={{ flex: 1 }}>

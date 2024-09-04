@@ -60,7 +60,6 @@ export function AddPlantForm({
       const photo = await cameraRef.current.takePictureAsync({ base64: true });
       const base64String = photo.base64 || "";
       setPlantImage(base64String);
-      console.log(base64String);
     }
     setCameraScreenVisible(false);
   };
@@ -73,11 +72,9 @@ export function AddPlantForm({
       quality: 1,
       base64: true,
     });
-    console.log(result);
 
     if (!result.canceled && result.assets[0].base64) {
       setPlantImage(result.assets[0].base64);
-      console.log(plantImage);
     }
   };
 
@@ -109,7 +106,6 @@ export function AddPlantForm({
 
       await insertData(tableName, data);
 
-      console.log("insterted into this collection:", data.collectionId);
     }
     onBackButtonClick();
   };
