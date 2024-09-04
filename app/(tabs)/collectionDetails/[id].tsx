@@ -15,26 +15,20 @@ export default function DetailedCollectionScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      let isActive = true;
 
-      fetchPlants(isActive);
+      fetchPlants();
 
-      return () => {
-        isActive = false;
-      };
     }, [])
   );
 
-  const fetchPlants = async (isActive: boolean) => {
+  const fetchPlants = async () => {
     const result = await getPlantsByCollectionId(2);
     if (!result) {
       console.log("No plants found");
       return;
     }
 
-    if (isActive) {
-      setPlants(result as Plant[]);
-    }
+    setPlants(result as Plant[]);
   };
 
   const navigateToDetailPage = (id: number) => {

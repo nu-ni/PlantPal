@@ -3,11 +3,20 @@ import React from 'react';
 import { HelloWave } from '@/components/HelloWave';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
-import { insertData, insertMany, getIdOfLastInsert, Tables } from '@/services/DatabaseService';
+import { insertData, insertMany, getIdOfLastInsert, Tables, initializeDatabase } from '@/services/DatabaseService';
 import { Plant } from '@/data/models';
 import { router } from 'expo-router';
+import { useAppState } from '@/hooks/useAppState';
 
 export default function Index() {
+
+  const appState = useAppState({
+    onAppEnterForeground: async () => {
+      console.log('initialize database');
+      await initializeDatabase();
+    },
+  });
+
   const handleImport = async () => {
     const inputFiles = await DocumentPicker.getDocumentAsync({
       type: 'application/json',
@@ -60,12 +69,12 @@ export default function Index() {
 
         {/* Erster grosser, runder Button */}
         <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton}
-        onPress={() =>
-          router.push({
-            pathname: "/collections",
-          })
-        }>
+          <Pressable style={styles.roundButton}
+            onPress={() =>
+              router.push({
+                pathname: "/collections",
+              })
+            }>
             <Text style={styles.roundButtonText}>+</Text>
           </Pressable>
         </View>
@@ -127,7 +136,7 @@ const styles = StyleSheet.create({
   roundButtonContainer: {
     marginTop: 170,
     marginBottom: 30,
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
   },
   roundButton: {
