@@ -6,7 +6,6 @@ import * as DocumentPicker from 'expo-document-picker';
 import { insertData, insertMany, getIdOfLastInsert, Tables, initializeDatabase } from '@/services/DatabaseService';
 import { Plant } from '@/data/models';
 import { router } from 'expo-router';
-import { useAppState } from '@/hooks/useAppState';
 
 export default function Index() {
 
