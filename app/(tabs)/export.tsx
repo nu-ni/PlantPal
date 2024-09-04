@@ -46,16 +46,24 @@ export default function ExportScreen() {
   const handleSaveToFile = async () => {
     try {
       const jsonString = await generateJsonFile();
-      if (!jsonString) return;
+      if (!jsonString || collections === undefined ) return;
 
-      const fileUri = FileSystem.documentDirectory + `collection_${collections[selectedId!].title}.json`;
+      const collection = collections.find((collection) => collection.id === selectedId)
+
+      if (!collection) {      
+        console.log(Errors.saveFileError, 'Selected collection not found');
+        alert('Selected collection not found')
+        return
+      }
+    
+      const fileUri = FileSystem.documentDirectory + `collection_${collection.title}.json`;
 
       await FileSystem.writeAsStringAsync(fileUri, jsonString, { encoding: FileSystem.EncodingType.UTF8 });
 
       return fileUri
     } catch (error) {
       console.log(Errors.saveFileError, error);
-      alert(`An error occurred while saving the file ${error}`);
+      alert(`${Errors.saveFileError} ${error}`);
     }
   };
 
