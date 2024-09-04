@@ -136,7 +136,7 @@ export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
 
       {!cameraScreenVisible && (
         <View style={styles.iconContainer}>
-          <Ionicons name="camera" size={30} onPress={handleCameraIconClick} />
+          <Ionicons name="camera" size={30} onPress={handleCameraIconClick} testID="camera-icon"/>
           <TouchableOpacity onPress={selectImageFromGallery}>
             <Ionicons name="image" size={30} />
           </TouchableOpacity>

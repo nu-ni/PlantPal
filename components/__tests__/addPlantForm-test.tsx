@@ -21,11 +21,11 @@ it("renders correctly", () => {
 
 // postitive
 it("should show camera view when the camera icon is clicked", () => {
-  const { getByText } = render(
+  const { getByText, getByTestId } = render(
     <AddPlantForm onButtonClick={jest.fn()} />
   );
 
-  const cameraIcon = getByText("camera");
+  const cameraIcon = getByTestId("camera-icon");
   fireEvent.press(cameraIcon);
 
   expect(getByText("Flip Camera")).toBeTruthy();
