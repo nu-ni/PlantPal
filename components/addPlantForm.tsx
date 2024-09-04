@@ -19,7 +19,7 @@ import {
   updateLastActive,
 } from "@/services/DatabaseService";
 import { Plant } from "@/data/models";
-import { router } from "expo-router";
+import { ActionButton } from "./actionButtton";
 
 export function AddPlantForm({
   onBackButtonClick: onBackButtonClick,
@@ -188,8 +188,8 @@ export function AddPlantForm({
           />
         </View>
       ) : null}
-      <Button title="Save" onPress={handleSubmit} />
-      <Button title="Back" onPress={onBackButtonClick} />
+      <ActionButton style=title="Save" onPress={handleSubmit} />
+      <ActionButton title="Back" onPress={onBackButtonClick} />
     </View>
   );
 }
