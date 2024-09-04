@@ -11,6 +11,7 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Plant } from "@/data/models";
 import {
   deleteData,
+  getLastActiveCollection,
   getPlantsByCollectionId,
   Tables,
 } from "@/services/DatabaseService";
@@ -37,7 +38,14 @@ export default function DetailedCollectionScreen() {
   // here you could remove is act
 
   const fetchPlants = async () => {
-    const result = await getPlantsByCollectionId(Number(id));
+    const lastActive = await getLastActiveCollection();
+    if (lastActive) {
+      console.log('after fetching plants', lastActive);
+    }
+    console.log('last active outside of if', lastActive);
+    
+    const result = await getPlantsByCollectionId(lastActive[0].id);
+    
     if (!result) {
       console.log("No plants found");
       return;

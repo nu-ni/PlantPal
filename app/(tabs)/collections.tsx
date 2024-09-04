@@ -1,12 +1,32 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { PlantCollection } from "@/data/models";
-import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
-import React, { useState, useEffect } from 'react';
+import {
+  deleteData,
+  fetchAllCollectionsWithPlantCount,
+  getLastActiveCollection,
+  insertData,
+  Tables,
+  updateLastActive,
+} from "@/services/DatabaseService";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, router } from "expo-router";
-import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
-import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Modal,
+  TextInput,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
+import {
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
 import { ActionButton } from "@/components/actionButtton";
+import { Button } from "react-native-paper";
 
 export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -42,11 +62,23 @@ export default function CollectionScreen() {
     </TouchableOpacity>
   );
 
-  const renderSwipeableCard = (title: string, description: string, id: string) => (
-    <Swipeable key={id} renderRightActions={() => renderLeftActions(Number(id))}>
+  const renderSwipeableCard = (
+    title: string,
+    description: string,
+    id: string
+  ) => (
+    <Swipeable
+      key={id}
+      renderRightActions={() => renderLeftActions(Number(id))}
+    >
       <TouchableOpacity
         style={styles.card}
-        onPress={() => {
+        onPress={async () => {
+          const lastActive = await getLastActiveCollection();
+          console.log('current lastActiveCollection', lastActive);
+          await updateLastActive(Number(id))
+          const lastActive1 = await getLastActiveCollection();
+          console.log('after collection was updated', lastActive1);
           router.push(`/collectionDetails/${id}`);
         }}
       >
@@ -56,18 +88,12 @@ export default function CollectionScreen() {
         </View>
         <Image
           style={styles.cardAvatar}
-          source={require('@/assets/images/user-solid.png')}
+          source={require("@/assets/images/user-solid.png")}
         />
       </TouchableOpacity>
     </Swipeable>
   );
 
-  useEffect(() => {
-    const firstTime = true;
-    if (firstTime) {
-      // setIsModalVisible(true);
-    }
-  }, []);
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
@@ -78,10 +104,15 @@ export default function CollectionScreen() {
   const handleModalClose = async () => {
     if (isInputValid) {
       setIsModalVisible(false);
-      await insertData(Tables.PLANT_COLLECTION, { title: inputValue, lastActive: new Date() });
+      await insertData(Tables.PLANT_COLLECTION, {
+        title: inputValue,
+        lastActive: new Date(),
+      });
       await fetchCollections();
     } else {
-      alert("Please enter a valid name containing at least one letter or number.");
+      alert(
+        "Please enter a valid name containing at least one letter or number."
+      );
     }
   };
 
@@ -101,8 +132,13 @@ export default function CollectionScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Swipe left to delete a Collection</Text>
-            <Pressable style={styles.closeButton} onPress={() => setIsInfoModalVisible(false)}>
+            <Text style={styles.modalText}>
+              Swipe left to delete a Collection
+            </Text>
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setIsInfoModalVisible(false)}
+            >
               <Text style={styles.closeButtonText}>Close</Text>
             </Pressable>
           </View>
@@ -112,20 +148,25 @@ export default function CollectionScreen() {
       {/* Main Content */}
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.cardContainer}>
-          {collections && collections instanceof Array && collections.map((collection) => {
-            const collectionId = collection.id!.toString();
-            return (
-
-              renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
-
-            )
-          })}
+          {collections &&
+            collections instanceof Array &&
+            collections.map((collection) => {
+              const collectionId = collection.id!.toString();
+              return renderSwipeableCard(
+                collection.title,
+                `${collection.count} Pflanzen`,
+                collectionId
+              );
+            })}
         </View>
       </GestureHandlerRootView>
 
       {/* Erster grosser, runder Button */}
       <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton} onPress={() => setIsModalVisible(true)}>
+        <Pressable
+          style={styles.roundButton}
+          onPress={() => setIsModalVisible(true)}
+        >
           <Text style={styles.roundButtonText}>+</Text>
         </Pressable>
       </View>
@@ -139,7 +180,9 @@ export default function CollectionScreen() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Enter a name for your Collection!</Text>
+            <Text style={styles.modalTitle}>
+              Enter a name for your Collection!
+            </Text>
             <TextInput
               style={styles.input}
               placeholder="f.e. Home"
@@ -218,12 +261,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   roundButton: {
-    backgroundColor: '#66AE54',
+    backgroundColor: "#66AE54",
     width: 60,
     height: 60,
     borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -234,10 +277,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   roundButtonText: {
-    color: 'white',
-    top: '-10%',
+    color: "white",
+    top: "-10%",
     fontSize: 50,
-    textAlign: 'center',
+    textAlign: "center",
   },
   modalContainer: {
     flex: 1,
@@ -266,9 +309,9 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalText: {
     fontSize: 16,

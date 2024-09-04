@@ -13,8 +13,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { CameraType, CameraView } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import {
+  getLastActiveCollection,
   getPlantsByCollectionId,
   insertData,
+  updateLastActive,
 } from "@/services/DatabaseService";
 import { Plant } from "@/data/models";
 import { router } from "expo-router";
@@ -94,20 +96,21 @@ export function AddPlantForm({
       return;
     }
 
-    let tableName = "Plant";
-    let data: Plant = {
-      title: plantName,
-      frequency: timesPerWeek,
-      waterAmount: amount,
-      // TODO: fetch collectionId of current collection
-      collectionId: 1,
-      image: plantImage,
-    };
+    const lastActiveCollection = await getLastActiveCollection();
+    if (lastActiveCollection) {
+      let tableName = "Plant";
+      let data: Plant = {
+        title: plantName,
+        frequency: timesPerWeek,
+        waterAmount: amount,
+        collectionId: lastActiveCollection[0].id,
+        image: plantImage,
+      };
 
-    await insertData(tableName, data);
-    console.log('insterted', data);
-    
-    // add id below as soon this componen is smart enough
+      await insertData(tableName, data);
+
+      console.log("insterted into this collection:", data.collectionId);
+    }
     onBackButtonClick();
   };
 
