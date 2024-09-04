@@ -29,38 +29,31 @@ export default function DetailedCollectionScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      let isActive = true;
 
-      fetchPlants(isActive);
+      fetchPlants();
 
-      return () => {
-        isActive = false;
-      };
     }, [])
   );
   // here you could remove is act
-  const fetchPlants = async (isActive: boolean) => {
+
+  const fetchPlants = async () => {
     const result = await getPlantsByCollectionId(Number(id));
     if (!result) {
       console.log("No plants found");
       return;
     }
 
-    if (isActive) {
-      setPlants(result as Plant[]);
-    }
+    setPlants(result as Plant[]);
   };
 
   const handleButtonClick = () => {
     setIsFormVisible(!isFormVisible);
-    fetchPlants(true);
+    fetchPlants();
   };
 
   const handleDelete = async (plantId: number) => {
     await deleteData(Tables.PLANT, plantId);
-    // look again at last active
-    await fetchPlants(true);
-    console.log("deleted id:", plantId);
+    await fetchPlants();
   };
 
   const renderLeftActions = (plantId: number) => (
@@ -193,6 +186,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   cardContainer: {
+
     paddingHorizontal: 10,
     marginTop: 16,
   },
@@ -213,10 +207,22 @@ const styles = StyleSheet.create({
     marginRight: 12, 
     borderRadius: 8, 
   },
+
   image: {
     height: 120, 
     width: 120,
     borderRadius: 8,
+  },
+  cardDescription: {
+    marginLeft: 10,
+    fontSize: 14,
+    marginBottom: 28,
+  },
+
+  cardAvatar: {
+    width: 65,
+    height: 75,
+    opacity: 0.7,
   },
   cardTextContainer: {
     flex: 1, 

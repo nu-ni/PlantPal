@@ -16,13 +16,9 @@ export default function ExportScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      let isActive = true;
 
       fetchCollections();
 
-      return () => {
-        isActive = false;
-      };
     }, [])
   );
 

@@ -42,25 +42,25 @@ export default function CollectionScreen() {
     </TouchableOpacity>
   );
 
-const renderSwipeableCard = (title: string, description: string, id: string) => (
-  <Swipeable key={id} renderRightActions={() => renderLeftActions(Number(id))}>
-    <TouchableOpacity
-      style={styles.card} 
-      onPress={() => {
-        router.push(`/collectionDetails/${id}`);
-      }}
-    >
-      <View style={styles.cardTextContainer}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardDescription}>{description}</Text>
-      </View>
-      <Image
-        style={styles.cardAvatar}
-        source={require('@/assets/images/user-solid.png')}
-      />
-    </TouchableOpacity>
-  </Swipeable>
-);
+  const renderSwipeableCard = (title: string, description: string, id: string) => (
+    <Swipeable key={id} renderRightActions={() => renderLeftActions(Number(id))}>
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => {
+          router.push(`/collectionDetails/${id}`);
+        }}
+      >
+        <View style={styles.cardTextContainer}>
+          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardDescription}>{description}</Text>
+        </View>
+        <Image
+          style={styles.cardAvatar}
+          source={require('@/assets/images/user-solid.png')}
+        />
+      </TouchableOpacity>
+    </Swipeable>
+  );
 
   useEffect(() => {
     const firstTime = true;
@@ -112,12 +112,12 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
       {/* Main Content */}
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.cardContainer}>
-          {collections.map((collection) => {
+          {collections && collections instanceof Array && collections.map((collection) => {
             const collectionId = collection.id!.toString();
             return (
-              
+
               renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
-              
+
             )
           })}
         </View>
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center', 
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
@@ -276,11 +276,11 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     borderColor: "#646363",
-    borderWidth: 2,           
+    borderWidth: 2,
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
-  },  
+  },
   closeButtonText: {
     color: "black",
   },
