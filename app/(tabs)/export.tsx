@@ -16,13 +16,7 @@ export default function ExportScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      let isActive = true;
-
       fetchCollections();
-
-      return () => {
-        isActive = false;
-      };
     }, [])
   );
 
@@ -34,6 +28,7 @@ export default function ExportScreen() {
   const generateJsonFile = async () => {
     if (!selectedId) {
       console.log('No collection selected');
+      alert('Please select a collection to export');
       return;
     }
 
@@ -51,20 +46,33 @@ export default function ExportScreen() {
   const handleSaveToFile = async () => {
     try {
       const jsonString = await generateJsonFile();
-      if (!jsonString) return;
+      if (!jsonString || collections === undefined ) return;
 
-      const fileUri = FileSystem.documentDirectory + `collection_${collections[selectedId!].title}.json`;
+      const collection = collections.find((collection) => collection.id === selectedId)
+
+      if (!collection) {      
+        console.log(Errors.saveFileError, 'Selected collection not found');
+        alert('Selected collection not found')
+        return
+      }
+    
+      const fileUri = FileSystem.documentDirectory + `collection_${collection.title}.json`;
 
       await FileSystem.writeAsStringAsync(fileUri, jsonString, { encoding: FileSystem.EncodingType.UTF8 });
 
       return fileUri
     } catch (error) {
       console.log(Errors.saveFileError, error);
+      alert(`${Errors.saveFileError} ${error}`);
     }
   };
 
   const handleExportAndShare = async () => {
     try {
+      if (!Sharing.isAvailableAsync()) {
+        alert('Sharing is not available on this platform');
+      }
+
       const fileUri = await handleSaveToFile();
 
       if (!fileUri) return;
@@ -72,6 +80,7 @@ export default function ExportScreen() {
       await Sharing.shareAsync(fileUri);
     } catch (error) {
       console.log(Errors.shareFileError, error);
+      alert(`An error occurred while sharing the file ${error}`);
     }
   };
 

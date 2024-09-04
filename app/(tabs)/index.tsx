@@ -1,13 +1,21 @@
 import { Image, StyleSheet, Pressable, Text, ScrollView, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HelloWave } from '@/components/HelloWave';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
-import { insertData, insertMany, getIdOfLastInsert, Tables } from '@/services/DatabaseService';
+import { insertData, insertMany, getIdOfLastInsert, Tables, initializeDatabase } from '@/services/DatabaseService';
 import { Plant } from '@/data/models';
 import { router } from 'expo-router';
 
 export default function Index() {
+
+  useEffect(() => {
+    const initialize = async () => {
+      await initializeDatabase();
+    }
+    initialize();
+  }, []);
+
   const handleImport = async () => {
     const inputFiles = await DocumentPicker.getDocumentAsync({
       type: 'application/json',
@@ -60,12 +68,12 @@ export default function Index() {
 
         {/* Erster grosser, runder Button */}
         <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton}
-        onPress={() =>
-          router.push({
-            pathname: "/collections",
-          })
-        }>
+          <Pressable style={styles.roundButton}
+            onPress={() =>
+              router.push({
+                pathname: "/collections",
+              })
+            }>
             <Text style={styles.roundButtonText}>+</Text>
           </Pressable>
         </View>
@@ -104,9 +112,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   scrollView: {
-    alignItems: 'center', // Center contents horizontally
-    paddingTop: 100, // Ensure content is not hidden behind header
-    paddingBottom: 50, // Provide padding at the bottom for better spacing
+    alignItems: 'center', 
+    paddingTop: 100, 
+    paddingBottom: 50,
   },
   roundedWrapper: {
     width: 500,
@@ -127,7 +135,7 @@ const styles = StyleSheet.create({
   roundButtonContainer: {
     marginTop: 170,
     marginBottom: 30,
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
   },
   roundButton: {
@@ -179,6 +187,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
+    marginTop: 15,
     fontWeight: 'normal',
     textAlign: 'center',
   },
