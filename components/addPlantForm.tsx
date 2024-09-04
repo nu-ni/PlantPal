@@ -14,9 +14,7 @@ import { CameraType, CameraView } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import {
   getLastActiveCollection,
-  getPlantsByCollectionId,
   insertData,
-  updateLastActive,
 } from "@/services/DatabaseService";
 import { Plant } from "@/data/models";
 import { ActionButton } from "./actionButtton";
