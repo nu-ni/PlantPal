@@ -1,4 +1,4 @@
-// failt leider
+// unit test inkl. snapshot test
 
 import React from 'react';
 import PlantCard from '../PlantCard';
