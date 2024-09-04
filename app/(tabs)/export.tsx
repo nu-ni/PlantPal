@@ -16,9 +16,7 @@ export default function ExportScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-
       fetchCollections();
-
     }, [])
   );
 
@@ -30,6 +28,7 @@ export default function ExportScreen() {
   const generateJsonFile = async () => {
     if (!selectedId) {
       console.log('No collection selected');
+      alert('Please select a collection to export');
       return;
     }
 
@@ -56,11 +55,16 @@ export default function ExportScreen() {
       return fileUri
     } catch (error) {
       console.log(Errors.saveFileError, error);
+      alert(`An error occurred while saving the file ${error}`);
     }
   };
 
   const handleExportAndShare = async () => {
     try {
+      if (!Sharing.isAvailableAsync()) {
+        alert('Sharing is not available on this platform');
+      }
+
       const fileUri = await handleSaveToFile();
 
       if (!fileUri) return;
@@ -68,6 +72,7 @@ export default function ExportScreen() {
       await Sharing.shareAsync(fileUri);
     } catch (error) {
       console.log(Errors.shareFileError, error);
+      alert(`An error occurred while sharing the file ${error}`);
     }
   };
 
