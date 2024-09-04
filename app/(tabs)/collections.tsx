@@ -115,7 +115,11 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
         <View style={styles.cardContainer}>
           {collections.map((collection) => {
             const collectionId = collection.id!.toString();
-            return renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId);
+            return (
+              
+              renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
+              
+            )
           })}
         </View>
       </GestureHandlerRootView>
