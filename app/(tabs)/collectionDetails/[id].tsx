@@ -27,38 +27,30 @@ export default function DetailedCollectionScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      let isActive = true;
 
-      fetchPlants(isActive);
+      fetchPlants();
 
-      return () => {
-        isActive = false;
-      };
     }, [])
   );
-// here you could remove is act
-  const fetchPlants = async (isActive: boolean) => {
+  // here you could remove is act
+  const fetchPlants = async () => {
     const result = await getPlantsByCollectionId(Number(id));
     if (!result) {
       console.log("No plants found");
       return;
     }
 
-    if (isActive) {
-      setPlants(result as Plant[]);
-    }
+    setPlants(result as Plant[]);
   };
 
   const handleButtonClick = () => {
     setIsFormVisible(!isFormVisible);
-    
+
   };
 
   const handleDelete = async (plantId: number) => {
     await deleteData(Tables.PLANT, plantId);
-    // look again at last active
-    await fetchPlants(true);
-    console.log("deleted id:", plantId);
+    await fetchPlants();
   };
 
   const renderLeftActions = (plantId: number) => (
@@ -70,7 +62,7 @@ export default function DetailedCollectionScreen() {
     </TouchableOpacity>
   );
 
-  const renderSwipeableCard = (title: string, frequency: number,  amount: number, id: string, image: string) => (
+  const renderSwipeableCard = (title: string, frequency: number, amount: number, id: string, image: string) => (
     <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
       <TouchableOpacity
         style={styles.card} // Use TouchableOpacity instead of View
@@ -92,18 +84,18 @@ export default function DetailedCollectionScreen() {
     <ParallaxScrollView headerText={id?.toString() || 'loading'}>
       {!isFormVisible && (
         <>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
 
-          {plants.map((plant) => {
-            const plantId = plant.id!.toString();
-            return (
-              
-              renderSwipeableCard(plant.title, plant.frequency, plant.waterAmount, plantId, plant.image)
-              
-            )
-          })}
-        </GestureHandlerRootView>
-          
+            {plants.map((plant) => {
+              const plantId = plant.id!.toString();
+              return (
+
+                renderSwipeableCard(plant.title, plant.frequency, plant.waterAmount, plantId, plant.image)
+
+              )
+            })}
+          </GestureHandlerRootView>
+
           <View style={styles.roundButtonContainer}>
             <Pressable style={styles.roundButton} onPress={handleButtonClick}>
               <Text style={styles.roundButtonText}>+</Text>
@@ -175,7 +167,7 @@ const styles = StyleSheet.create({
   swipeText: {
     color: "#fff",
     fontWeight: "bold",
-  },cardContainer: {
+  }, cardContainer: {
     paddingHorizontal: 10,
     marginTop: 16,
   },
@@ -205,7 +197,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 28,
   },
-  
+
   cardAvatar: {
     width: 65,
     height: 75,
