@@ -94,7 +94,7 @@ export default function CollectionScreen() {
       <Tooltip
         isVisible={tooltipVisible}
         content={<Text>Swipe left to delete a Collection</Text>}
-        placement="top"
+        placement="left"
         onClose={() => setTooltipVisible(false)}
       >
         <TouchableOpacity style={styles.touchable} onPress={() => setTooltipVisible(true)}>
