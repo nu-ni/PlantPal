@@ -65,6 +65,7 @@ export const initializeDatabase = async () => {
     }
   });
 };
+
 export const checkHasCollection = async () => {
   return await performDatabaseOperation(async (db) => {
     let checkQuery = `SELECT name FROM sqlite_master WHERE type='table' AND name='${Tables.PLANT_COLLECTION}';`;
