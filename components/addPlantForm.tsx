@@ -38,11 +38,19 @@ export function AddPlantForm({
   };
 
   const handleTimesPerWeekChange = (text: string) => {
-    setTimesPerWeek(Number(text));
+    if (/^\d*$/.test(text)) {
+      setTimesPerWeek(Number(text));
+    } else {
+      Alert.alert("Ungültige Eingabe", "Bitte geben Sie nur Zahlen ein.");
+    }
   };
 
   const handleAmountChange = (text: string) => {
-    setAmount(Number(text));
+    if (/^\d*$/.test(text)) {
+      setAmount(Number(text));
+    } else {
+      Alert.alert("Ungültige Eingabe", "Bitte geben Sie nur Zahlen ein.");
+    }
   };
 
   const handleCameraIconClick = () => {
@@ -192,7 +200,7 @@ export function AddPlantForm({
 
 const styles = StyleSheet.create({
   actionButton: {
-  marginTop: 20
+    marginTop: 20,
   },
   row: {
     flexDirection: "row",
