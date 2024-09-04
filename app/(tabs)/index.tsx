@@ -112,9 +112,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   scrollView: {
-    alignItems: 'center', // Center contents horizontally
-    paddingTop: 100, // Ensure content is not hidden behind header
-    paddingBottom: 50, // Provide padding at the bottom for better spacing
+    alignItems: 'center', 
+    paddingTop: 100, 
+    paddingBottom: 50,
   },
   roundedWrapper: {
     width: 500,
@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
+    marginTop: 15,
     fontWeight: 'normal',
     textAlign: 'center',
   },
