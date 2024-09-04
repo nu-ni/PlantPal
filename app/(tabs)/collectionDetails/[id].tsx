@@ -213,11 +213,6 @@ const styles = StyleSheet.create({
     width: 120,
     borderRadius: 8,
   },
-  cardDescription: {
-    marginLeft: 10,
-    fontSize: 14,
-    marginBottom: 28,
-  },
 
   cardAvatar: {
     width: 65,
