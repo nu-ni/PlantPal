@@ -82,7 +82,7 @@ export default function DetailedCollectionScreen() {
           <Text style={styles.cardTitle}>{title}</Text>
           <Text style={styles.cardDescription}>{frequency} per week</Text>
           <Text style={styles.cardDescription}>{amount} dl</Text>
-          <Image source={`data:image/jpeg;base64,${image}`} style={styles.image}/>
+          <Image source={{ uri: `data:image/jpeg;base64,${image}` }} style={styles.image} />
 
         </View>
       </TouchableOpacity>
