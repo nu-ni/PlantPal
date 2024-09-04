@@ -48,9 +48,9 @@ export default function CollectionScreen() {
   );
 
 const renderSwipeableCard = (title: string, description: string, id: string) => (
-  <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
+  <Swipeable key={id} renderRightActions={() => renderLeftActions(Number(id))}>
     <TouchableOpacity
-      style={styles.card} // Use TouchableOpacity instead of View
+      style={styles.card} 
       onPress={() => {
         // do navigation
        }}
@@ -159,11 +159,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 17,
     marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
     flexDirection: "row",
     alignItems: "center",
   },

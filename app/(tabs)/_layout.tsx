@@ -36,12 +36,12 @@ export default function TabLayout() {
         name="detailedCollection"
         options={{
           title: '',
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({ focused, size }) => (
             <Image
               source={require('@/assets/images/seedling-solid.png')}
               style={{
-                width: 25,
-                height: 25,
+                width: size,
+                height: size,
                 tintColor: focused ? 'orange' : 'grey'
               }}
             />
