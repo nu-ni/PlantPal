@@ -105,7 +105,6 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
               
               renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
               
-              
             )
           })}
         </View>

@@ -50,7 +50,7 @@ export default function TabTwoScreen() {
       title: 'newplant',
       frequency: 10,
       waterAmount: 100,
-      collectionId: 2,
+      collectionId: 1,
       image: '',
     };
 

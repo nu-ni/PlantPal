@@ -12,7 +12,10 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { CameraType, CameraView } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import { insertData } from "@/services/DatabaseService";
+import {
+  getPlantsByCollectionId,
+  insertData,
+} from "@/services/DatabaseService";
 import { Plant } from "@/data/models";
 
 export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
@@ -56,16 +59,15 @@ export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
   };
 
   const selectImageFromGallery = async () => {
-    
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      // here you can do editable: 
+      // here you can do editable:
       aspect: [4, 3],
       quality: 1,
       base64: true,
     });
     console.log(result);
-    
+
     if (!result.canceled && result.assets[0].base64) {
       setPlantImage(result.assets[0].base64);
       console.log(plantImage);
@@ -75,7 +77,7 @@ export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
   const removeImage = () => {
     setPlantImage("");
   };
-  
+
   const handleSubmit = async () => {
     // some very basic input validation
     if (plantName.trim() === "") {
@@ -93,7 +95,7 @@ export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
       frequency: timesPerWeek,
       waterAmount: amount,
       // TODO: fetch collectionId of current collection
-      collectionId: 2,
+      collectionId: 1,
       image: plantImage,
     };
 
@@ -179,10 +181,7 @@ export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
         </View>
       ) : null}
       <Button title="Save" onPress={handleSubmit} />
-      <Button
-        title="Back"
-        onPress={onButtonClick}
-      />
+      <Button title="Back" onPress={onButtonClick} />
     </View>
   );
 }
