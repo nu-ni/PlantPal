@@ -3,13 +3,14 @@ import { PlantCollection } from "@/data/models";
 import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, router } from "expo-router";
 import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { ActionButton } from "@/components/actionButtton";
 
 export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
 
@@ -18,13 +19,11 @@ export default function CollectionScreen() {
   const fetchCollections = async () => {
     const collectionData = await fetchAllCollectionsWithPlantCount();
     setCollections(collectionData as PlantCollection[]);
-  }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
-
       fetchCollections();
-
     }, [])
   );
 
@@ -82,15 +81,35 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
       await insertData(Tables.PLANT_COLLECTION, { title: inputValue, lastActive: new Date() });
       await fetchCollections();
     } else {
-      alert(
-        "Please enter a valid name containing at least one letter or number."
-      );
+      alert("Please enter a valid name containing at least one letter or number.");
     }
   };
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
-      <Ionicons name="information-circle-outline" size={30}></Ionicons>
+      {/* Info-Icon */}
+      <TouchableOpacity onPress={() => setIsInfoModalVisible(true)}>
+        <Ionicons name="information-circle-outline" size={30} />
+      </TouchableOpacity>
+
+      {/* Info-Modal Implementation */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isInfoModalVisible}
+        onRequestClose={() => setIsInfoModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Swipe left to delete a Collection</Text>
+            <Pressable style={styles.closeButton} onPress={() => setIsInfoModalVisible(false)}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Main Content */}
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.cardContainer}>
           {collections.map((collection) => {
@@ -99,7 +118,6 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
               
               renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
               
-              
             )
           })}
         </View>
@@ -107,13 +125,12 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
 
       {/* Erster grosser, runder Button */}
       <View style={styles.roundButtonContainer}>
-        <Pressable style={styles.roundButton}
-          onPress={() => setIsModalVisible(true)}>
+        <Pressable style={styles.roundButton} onPress={() => setIsModalVisible(true)}>
           <Text style={styles.roundButtonText}>+</Text>
         </Pressable>
       </View>
 
-      {/* Popup Modal */}
+      {/* Add Collection Modal */}
       <Modal
         visible={isModalVisible}
         transparent={true}
@@ -137,7 +154,6 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
           </View>
         </View>
       </Modal>
-
     </ParallaxScrollView>
   );
 }
@@ -247,5 +263,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  closeButton: {
+    borderColor: "#646363",
+    borderWidth: 2,           
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+  },  
+  closeButtonText: {
+    color: "black",
   },
 });
