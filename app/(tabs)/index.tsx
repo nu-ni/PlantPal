@@ -22,14 +22,17 @@ export default function Index() {
       copyToCacheDirectory: true,
     });
 
+    console.log('inputFiles', inputFiles)
+
     if (inputFiles.canceled) {
       console.log("No file selected");
       return;
     }
 
     for (let inputFile of inputFiles.assets) {
-      if (inputFile.file) {
-        let { uri } = inputFile;
+      if (inputFile.uri) {
+        let uri = inputFile.uri;
+
         let fileContent = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.UTF8,
         });
@@ -51,6 +54,7 @@ export default function Index() {
         await insertMany(Tables.PLANT, newPlants);
 
         console.log("Import successful");
+        alert("Import successful");
       }
     }
   };
@@ -80,7 +84,7 @@ export default function Index() {
 
         {/* Willkommenstext und HelloWave-Komponente */}
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Welcome!</Text>
+          <Text style={styles.title}>Welcome!!!!</Text>
           <HelloWave />
         </View>
 
@@ -112,9 +116,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   scrollView: {
-    alignItems: 'center', // Center contents horizontally
-    paddingTop: 100, // Ensure content is not hidden behind header
-    paddingBottom: 50, // Provide padding at the bottom for better spacing
+    alignItems: 'center', 
+    paddingTop: 100, 
+    paddingBottom: 50,
   },
   roundedWrapper: {
     width: 500,
@@ -187,6 +191,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
+    marginTop: 15,
     fontWeight: 'normal',
     textAlign: 'center',
   },

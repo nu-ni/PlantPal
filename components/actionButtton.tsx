@@ -13,7 +13,7 @@ export function ActionButton({ title, onPress, disabled = false, style }: Action
   return (
     <View>
       <Pressable
-        style={[styles.button, style, disabled && styles.buttonDisabled]} // Apply custom styles here
+        style={[styles.button, style, disabled && styles.buttonDisabled]}
         onPress={onPress}
         disabled={disabled}
       >

@@ -13,11 +13,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { CameraType, CameraView } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import {
-  getPlantsByCollectionId,
+  getLastActiveCollection,
   insertData,
 } from "@/services/DatabaseService";
 import { Plant } from "@/data/models";
-import { router } from "expo-router";
+import { ActionButton } from "./actionButtton";
 
 export function AddPlantForm({
   onBackButtonClick: onBackButtonClick,
@@ -38,11 +38,19 @@ export function AddPlantForm({
   };
 
   const handleTimesPerWeekChange = (text: string) => {
-    setTimesPerWeek(Number(text)); // Convert string to number
+    if (/^\d*$/.test(text)) {
+      setTimesPerWeek(Number(text));
+    } else {
+      Alert.alert("Ungültige Eingabe", "Bitte geben Sie nur Zahlen ein.");
+    }
   };
 
   const handleAmountChange = (text: string) => {
-    setAmount(Number(text)); // Convert string to number
+    if (/^\d*$/.test(text)) {
+      setAmount(Number(text));
+    } else {
+      Alert.alert("Ungültige Eingabe", "Bitte geben Sie nur Zahlen ein.");
+    }
   };
 
   const handleCameraIconClick = () => {
@@ -58,7 +66,6 @@ export function AddPlantForm({
       const photo = await cameraRef.current.takePictureAsync({ base64: true });
       const base64String = photo.base64 || "";
       setPlantImage(base64String);
-      console.log(base64String);
     }
     setCameraScreenVisible(false);
   };
@@ -66,16 +73,13 @@ export function AddPlantForm({
   const selectImageFromGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      // here you can do editable:
       aspect: [4, 3],
       quality: 1,
       base64: true,
     });
-    console.log(result);
 
     if (!result.canceled && result.assets[0].base64) {
       setPlantImage(result.assets[0].base64);
-      console.log(plantImage);
     }
   };
 
@@ -84,7 +88,6 @@ export function AddPlantForm({
   };
 
   const handleSubmit = async () => {
-    // some very basic input validation
     if (plantName.trim() === "") {
       Alert.alert("Validation Error", "Plant Name cannot be empty.");
       return;
@@ -94,20 +97,20 @@ export function AddPlantForm({
       return;
     }
 
-    let tableName = "Plant";
-    let data: Plant = {
-      title: plantName,
-      frequency: timesPerWeek,
-      waterAmount: amount,
-      // TODO: fetch collectionId of current collection
-      collectionId: 1,
-      image: plantImage,
-    };
+    const lastActiveCollection = await getLastActiveCollection();
+    if (lastActiveCollection) {
+      let tableName = "Plant";
+      let data: Plant = {
+        title: plantName,
+        frequency: timesPerWeek,
+        waterAmount: amount,
+        collectionId: lastActiveCollection[0].id,
+        image: plantImage,
+      };
 
-    await insertData(tableName, data);
-    console.log('insterted', data);
-    
-    // add id below as soon this componen is smart enough
+      await insertData(tableName, data);
+
+    }
     onBackButtonClick();
   };
 
@@ -189,13 +192,16 @@ export function AddPlantForm({
           />
         </View>
       ) : null}
-      <Button title="Save" onPress={handleSubmit} />
-      <Button title="Back" onPress={onBackButtonClick} />
+      <ActionButton style={styles.actionButton} title="Save" onPress={handleSubmit} />
+      <ActionButton style={styles.actionButton} title="Back" onPress={onBackButtonClick} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  actionButton: {
+    marginTop: 20,
+  },
   row: {
     flexDirection: "row",
     alignItems: "center",
