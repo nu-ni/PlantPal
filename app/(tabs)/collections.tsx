@@ -88,7 +88,6 @@ export default function CollectionScreen() {
     </Swipeable>
   );
 
-
   const handleInputChange = (text: string) => {
     setInputValue(text);
     const isValid = /[a-zA-Z0-9]/.test(text);
