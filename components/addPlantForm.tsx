@@ -17,8 +17,13 @@ import {
   insertData,
 } from "@/services/DatabaseService";
 import { Plant } from "@/data/models";
+import { router } from "expo-router";
 
-export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
+export function AddPlantForm({
+  onBackButtonClick: onBackButtonClick,
+}: {
+  onBackButtonClick: () => void;
+}) {
   const [plantName, setPlantName] = useState<string>("");
   const [timesPerWeek, setTimesPerWeek] = useState<number>(0);
   const [amount, setAmount] = useState<number>(0);
@@ -100,6 +105,10 @@ export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
     };
 
     await insertData(tableName, data);
+    console.log('insterted', data);
+    
+    // add id below as soon this componen is smart enough
+    onBackButtonClick();
   };
 
   return (
@@ -181,7 +190,7 @@ export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
         </View>
       ) : null}
       <Button title="Save" onPress={handleSubmit} />
-      <Button title="Back" onPress={onButtonClick} />
+      <Button title="Back" onPress={onBackButtonClick} />
     </View>
   );
 }
