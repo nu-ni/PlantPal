@@ -62,13 +62,6 @@ export default function CollectionScreen() {
     </Swipeable>
   );
 
-  useEffect(() => {
-    const firstTime = true;
-    if (firstTime) {
-      // setIsModalVisible(true);
-    }
-  }, []);
-
   const handleInputChange = (text: string) => {
     setInputValue(text);
     const isValid = /[a-zA-Z0-9]/.test(text);

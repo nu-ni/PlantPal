@@ -22,14 +22,17 @@ export default function Index() {
       copyToCacheDirectory: true,
     });
 
+    console.log('inputFiles', inputFiles)
+
     if (inputFiles.canceled) {
       console.log("No file selected");
       return;
     }
 
     for (let inputFile of inputFiles.assets) {
-      if (inputFile.file) {
-        let { uri } = inputFile;
+      if (inputFile.uri) {
+        let uri = inputFile.uri;
+
         let fileContent = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.UTF8,
         });
@@ -51,6 +54,7 @@ export default function Index() {
         await insertMany(Tables.PLANT, newPlants);
 
         console.log("Import successful");
+        alert("Import successful");
       }
     }
   };
@@ -80,7 +84,7 @@ export default function Index() {
 
         {/* Willkommenstext und HelloWave-Komponente */}
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Welcome!</Text>
+          <Text style={styles.title}>Welcome!!!!</Text>
           <HelloWave />
         </View>
 
