@@ -1,7 +1,7 @@
 import CollectionCard from '@/components/CollectionCard';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { getAll, getPlantsByCollectionId, Tables } from '@/services/DatabaseService';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -76,8 +76,8 @@ export default function ExportScreen() {
   };
 
   return (
-    <ParallaxScrollView headerText={'Export'}>
-      {collections.map((collection) => {
+    <ParallaxScrollView headerText={'Share'}>
+    {collections && collections instanceof Array && collections.map((collection) => {
         return (
           <CollectionCard
             key={collection.id}
