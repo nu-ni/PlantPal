@@ -1,8 +1,60 @@
 import { Image, StyleSheet, Pressable, Text, ScrollView, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HelloWave } from '@/components/HelloWave';
+import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from 'expo-document-picker';
+import { insertData, insertMany, getIdOfLastInsert, Tables, initializeDatabase } from '@/services/DatabaseService';
+import { Plant } from '@/data/models';
+import { router } from 'expo-router';
 
 export default function Index() {
+
+  useEffect(() => {
+    const initialize = async () => {
+      await initializeDatabase();
+    }
+    initialize();
+  }, []);
+
+  const handleImport = async () => {
+    const inputFiles = await DocumentPicker.getDocumentAsync({
+      type: 'application/json',
+      copyToCacheDirectory: true,
+    });
+
+    if (inputFiles.canceled) {
+      console.log("No file selected");
+      return;
+    }
+
+    for (let inputFile of inputFiles.assets) {
+      if (inputFile.file) {
+        let { uri } = inputFile;
+        let fileContent = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.UTF8,
+        });
+
+        let data = JSON.parse(fileContent);
+
+        if (!data) {
+          console.log("No data imported");
+          return;
+        }
+
+        let { collection, plants } = data;
+        delete collection.id;
+
+        await insertData(Tables.PLANT_COLLECTION, collection);
+
+        let newId = await getIdOfLastInsert(collection);
+        let newPlants = plants.map((plant: Plant[]) => ({ ...plant, collectionId: newId }));
+        await insertMany(Tables.PLANT, newPlants);
+
+        console.log("Import successful");
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -14,12 +66,14 @@ export default function Index() {
           />
         </View>
 
-        {/* Erster großer, runder Button */}
+        {/* Erster grosser, runder Button */}
         <View style={styles.roundButtonContainer}>
-          <Pressable
-            style={styles.roundButton}
-            onPress={() => console.log("Großer runder Button gedrückt")}
-          >
+          <Pressable style={styles.roundButton}
+            onPress={() =>
+              router.push({
+                pathname: "/collections",
+              })
+            }>
             <Text style={styles.roundButtonText}>+</Text>
           </Pressable>
         </View>
@@ -42,7 +96,7 @@ export default function Index() {
         <View style={styles.centeredButtonContainer}>
           <Pressable
             style={styles.Button}
-            onPress={() => console.log("Importiert")}
+            onPress={handleImport}
           >
             <Text style={styles.buttonText}>Import</Text>
           </Pressable>
@@ -75,12 +129,14 @@ const styles = StyleSheet.create({
   },
   plantLogo: {
     height: '150%',
-    width: '150%', 
+    width: '150%',
     resizeMode: 'contain',
   },
   roundButtonContainer: {
     marginTop: 170,
     marginBottom: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   roundButton: {
     backgroundColor: '#557F60',
@@ -91,9 +147,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   roundButtonText: {
-    color: 'black',
+    color: 'white',
     fontSize: 50,
     textAlign: 'center',
+    marginBottom: 5,
   },
   Button: {
     backgroundColor: '#557F60',
@@ -101,10 +158,11 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     width: 200,
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 20,
   },
   buttonText: {
-    color: 'black',
+    color: 'white',
     fontSize: 18,
   },
   titleContainer: {
@@ -120,7 +178,7 @@ const styles = StyleSheet.create({
   stepContainer: {
     alignItems: 'center',
     marginBottom: 20,
-    paddingHorizontal: 20, // Padding for better text spacing
+    paddingHorizontal: 20,
   },
   descriptionText: {
     fontSize: 16,
