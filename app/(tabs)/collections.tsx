@@ -3,7 +3,7 @@ import { PlantCollection } from "@/data/models";
 import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
-import { Link, useFocusEffect } from "expo-router";
+import { useFocusEffect, router } from "expo-router";
 import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { ActionButton } from "@/components/actionButtton";
