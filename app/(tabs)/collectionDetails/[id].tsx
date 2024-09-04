@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   Pressable,
@@ -14,11 +14,13 @@ import {
   getPlantsByCollectionId,
   Tables,
 } from "@/services/DatabaseService";
-import PlantCard from "@/components/PlantCard";
 import { useFocusEffect } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 import { AddPlantForm } from "@/components/addPlantForm";
-import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
 
 export default function DetailedCollectionScreen() {
   const [plants, setPlants] = useState<Plant[]>([]);
@@ -36,7 +38,7 @@ export default function DetailedCollectionScreen() {
       };
     }, [])
   );
-// here you could remove is act
+  // here you could remove is act
   const fetchPlants = async (isActive: boolean) => {
     const result = await getPlantsByCollectionId(Number(id));
     if (!result) {
@@ -51,7 +53,7 @@ export default function DetailedCollectionScreen() {
 
   const handleButtonClick = () => {
     setIsFormVisible(!isFormVisible);
-    
+    fetchPlants(true);
   };
 
   const handleDelete = async (plantId: number) => {
@@ -70,40 +72,54 @@ export default function DetailedCollectionScreen() {
     </TouchableOpacity>
   );
 
-  const renderSwipeableCard = (title: string, frequency: number,  amount: number, id: string, image: string) => (
+  const renderSwipeableCard = (
+    title: string,
+    frequency: number,
+    amount: number,
+    id: string,
+    image: string
+  ) => (
     <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
       <TouchableOpacity
-        style={styles.card} // Use TouchableOpacity instead of View
+        style={styles.card}
         onPress={() => {
           router.push(`/collectionDetails/${id}`);
         }}
       >
+        {/* Image Container */}
+        <View style={styles.cardImageContainer}>
+          <Image
+            source={{ uri: `data:image/jpeg;base64,${image}` }}
+            style={styles.image}
+          />
+        </View>
+        {/* Text Container */}
         <View style={styles.cardTextContainer}>
           <Text style={styles.cardTitle}>{title}</Text>
           <Text style={styles.cardDescription}>{frequency} per week</Text>
           <Text style={styles.cardDescription}>{amount} dl</Text>
-          <Image source={{ uri: `data:image/jpeg;base64,${image}` }} style={styles.image} />
-
         </View>
       </TouchableOpacity>
     </Swipeable>
   );
+  
   return (
-    <ParallaxScrollView headerText={id?.toString() || 'loading'}>
+    <ParallaxScrollView headerText={id?.toString() || "loading"}>
       {!isFormVisible && (
         <>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            {plants.map((plant) => {
+              const plantId = plant.id!.toString();
+              return renderSwipeableCard(
+                plant.title,
+                plant.frequency,
+                plant.waterAmount,
+                plantId,
+                plant.image
+              );
+            })}
+          </GestureHandlerRootView>
 
-          {plants.map((plant) => {
-            const plantId = plant.id!.toString();
-            return (
-              
-              renderSwipeableCard(plant.title, plant.frequency, plant.waterAmount, plantId, plant.image)
-              
-            )
-          })}
-        </GestureHandlerRootView>
-          
           <View style={styles.roundButtonContainer}>
             <Pressable style={styles.roundButton} onPress={handleButtonClick}>
               <Text style={styles.roundButtonText}>+</Text>
@@ -111,7 +127,7 @@ export default function DetailedCollectionScreen() {
           </View>
         </>
       )}
-      {isFormVisible && <AddPlantForm onButtonClick={handleButtonClick} />}
+      {isFormVisible && <AddPlantForm onBackButtonClick={handleButtonClick} />}
     </ParallaxScrollView>
   );
 }
@@ -175,48 +191,50 @@ const styles = StyleSheet.create({
   swipeText: {
     color: "#fff",
     fontWeight: "bold",
-  },cardContainer: {
+  },
+  cardContainer: {
     paddingHorizontal: 10,
     marginTop: 16,
   },
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    padding: 17,
+    padding: 12,
     marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-    flexDirection: "row",
+    flexDirection: "row", 
     alignItems: "center",
   },
-  cardTitle: {
-    fontSize: 18,
-    marginTop: 6,
-    marginLeft: 10,
-    fontWeight: "bold",
-    marginBottom: 2,
-    flex: 1,
-  },
-  cardDescription: {
-    marginLeft: 10,
-    fontSize: 14,
-    marginBottom: 28,
-  },
-  
-  cardAvatar: {
-    width: 65,
-    height: 75,
-    opacity: 0.7,
-  },
-  cardTextContainer: {
-    flex: 1,
+  cardImageContainer: {
+    marginRight: 12, 
+    borderRadius: 8, 
   },
   image: {
-    height: 20,
-    width: 20,
-    alignSelf: 'center',
+    height: 120, 
+    width: 120,
+    borderRadius: 8,
+  },
+  cardTextContainer: {
+    flex: 1, 
+    justifyContent: "center",
+    alignItems: "flex-end", 
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 4,
+    marginRight: 20
+
+  },
+  cardDescription: {
+    fontSize: 16,
+    color: "#555",
+    marginBottom: 2,
+    marginRight: 20
   },
 });
+
