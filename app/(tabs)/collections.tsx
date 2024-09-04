@@ -3,14 +3,14 @@ import { PlantCollection } from "@/data/models";
 import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
+import { Link, useFocusEffect } from "expo-router";
 import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { ActionButton } from "@/components/actionButtton";
 
 export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
 
   const [collections, setCollections] = useState<PlantCollection[]>([]);
@@ -52,8 +52,8 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
     <TouchableOpacity
       style={styles.card} 
       onPress={() => {
-        // do navigation
-       }}
+        router.push(`/collectionDetails/${id}`);
+      }}
     >
       <View style={styles.cardTextContainer}>
         <Text style={styles.cardTitle}>{title}</Text>
@@ -86,7 +86,9 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
       await insertData(Tables.PLANT_COLLECTION, { title: inputValue, lastActive: new Date() });
       await fetchCollections();
     } else {
-      alert("Please enter a valid name containing at least one letter or number.");
+      alert(
+        "Please enter a valid name containing at least one letter or number."
+      );
     }
   };
 
@@ -98,7 +100,10 @@ const renderSwipeableCard = (title: string, description: string, id: string) => 
           {collections.map((collection) => {
             const collectionId = collection.id!.toString();
             return (
+              
               renderSwipeableCard(collection.title, `${collection.count} Pflanzen`, collectionId)
+              
+              
             )
           })}
         </View>
@@ -197,8 +202,8 @@ const styles = StyleSheet.create({
   },
   roundButtonContainer: {
     marginBottom: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   roundButton: {
     backgroundColor: '#66AE54',
@@ -224,27 +229,27 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
     width: 300,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 20,
     marginBottom: 20,
   },
   input: {
-    width: '100%',
+    width: "100%",
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
-  }
+  },
 });

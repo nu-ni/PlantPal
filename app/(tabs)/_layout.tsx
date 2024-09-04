@@ -33,7 +33,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="detailedCollection"
+        name="collectionDetails/[id]"
         options={{
           title: '',
           tabBarIcon: ({ focused, size }) => (

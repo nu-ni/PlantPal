@@ -15,7 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import { insertData } from "@/services/DatabaseService";
 import { Plant } from "@/data/models";
 
-export function AddPlantForm() {
+export function AddPlantForm({ onButtonClick }: { onButtonClick: () => void }) {
   const [plantName, setPlantName] = useState<string>("");
   const [timesPerWeek, setTimesPerWeek] = useState<number>(0);
   const [amount, setAmount] = useState<number>(0);
@@ -75,7 +75,7 @@ export function AddPlantForm() {
   const removeImage = () => {
     setPlantImage("");
   };
-
+  
   const handleSubmit = async () => {
     // some very basic input validation
     if (plantName.trim() === "") {
@@ -181,7 +181,7 @@ export function AddPlantForm() {
       <Button title="Save" onPress={handleSubmit} />
       <Button
         title="Back"
-        onPress={() => console.log("Back button pressed")}
+        onPress={onButtonClick}
       />
     </View>
   );
