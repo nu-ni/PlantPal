@@ -192,7 +192,7 @@ export function AddPlantForm({
 
 const styles = StyleSheet.create({
   actionButton: {
-  marginBottom: 10,
+  marginTop: 20
   },
   row: {
     flexDirection: "row",
