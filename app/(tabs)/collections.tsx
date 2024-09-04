@@ -13,7 +13,6 @@ export default function CollectionScreen() {
   const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
-  const router = useRouter();
 
   const [collections, setCollections] = useState<PlantCollection[]>([]);
 
