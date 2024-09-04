@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Pressable, Text, ScrollView, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HelloWave } from '@/components/HelloWave';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
@@ -10,12 +10,12 @@ import { useAppState } from '@/hooks/useAppState';
 
 export default function Index() {
 
-  const appState = useAppState({
-    onAppEnterForeground: async () => {
-      console.log('initialize database');
+  useEffect(() => {
+    const initialize = async () => {
       await initializeDatabase();
-    },
-  });
+    }
+    initialize();
+  }, []);
 
   const handleImport = async () => {
     const inputFiles = await DocumentPicker.getDocumentAsync({

@@ -12,7 +12,7 @@ const tableCreationMap: Dict = {
     CREATE TABLE IF NOT EXISTS PlantCollection (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
-      lastActive DATE NOT NULL
+      lastActive INTEGER NOT NULL
     )
   `,
     [Tables.PLANT]: `
