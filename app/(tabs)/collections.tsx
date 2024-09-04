@@ -4,7 +4,6 @@ import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } fro
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
-import Tooltip from 'react-native-walkthrough-tooltip';
 import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
@@ -12,9 +11,9 @@ import { ActionButton } from "@/components/actionButtton";
 
 export default function CollectionScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
-  const [tooltipVisible, setTooltipVisible] = useState(false);
   const router = useRouter();
 
   const [collections, setCollections] = useState<PlantCollection[]>([]);
@@ -90,17 +89,27 @@ export default function CollectionScreen() {
 
   return (
     <ParallaxScrollView headerText={"Your Collections"}>
-      {/* Tooltip Implementation */}
-      <Tooltip
-        isVisible={tooltipVisible}
-        content={<Text>Swipe left to delete a Collection</Text>}
-        placement="left"
-        onClose={() => setTooltipVisible(false)}
+      {/* Info-Icon */}
+      <TouchableOpacity onPress={() => setIsInfoModalVisible(true)}>
+        <Ionicons name="information-circle-outline" size={30} />
+      </TouchableOpacity>
+
+      {/* Info-Modal Implementation */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isInfoModalVisible}
+        onRequestClose={() => setIsInfoModalVisible(false)}
       >
-        <TouchableOpacity style={styles.touchable} onPress={() => setTooltipVisible(true)}>
-          <Ionicons name="information-circle-outline" size={30} />
-        </TouchableOpacity>
-      </Tooltip>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Swipe left to delete a Collection</Text>
+            <Pressable style={styles.closeButton} onPress={() => setIsInfoModalVisible(false)}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
 
       {/* Main Content */}
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -119,7 +128,7 @@ export default function CollectionScreen() {
         </Pressable>
       </View>
 
-      {/* Popup Modal */}
+      {/* Add Collection Modal */}
       <Modal
         visible={isModalVisible}
         transparent={true}
@@ -244,9 +253,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
   },
-  touchable: {
-    padding: 10, 
-    backgroundColor: "#ddd",
-    borderRadius: 8,
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  closeButton: {
+    borderColor: "#646363",
+    borderWidth: 2,           
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+  },  
+  closeButtonText: {
+    color: "black",
   },
 });
