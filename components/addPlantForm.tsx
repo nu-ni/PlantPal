@@ -38,11 +38,11 @@ export function AddPlantForm({
   };
 
   const handleTimesPerWeekChange = (text: string) => {
-    setTimesPerWeek(Number(text)); // Convert string to number
+    setTimesPerWeek(Number(text));
   };
 
   const handleAmountChange = (text: string) => {
-    setAmount(Number(text)); // Convert string to number
+    setAmount(Number(text));
   };
 
   const handleCameraIconClick = () => {
@@ -65,7 +65,6 @@ export function AddPlantForm({
   const selectImageFromGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      // here you can do editable:
       aspect: [4, 3],
       quality: 1,
       base64: true,
@@ -81,7 +80,6 @@ export function AddPlantForm({
   };
 
   const handleSubmit = async () => {
-    // some very basic input validation
     if (plantName.trim() === "") {
       Alert.alert("Validation Error", "Plant Name cannot be empty.");
       return;
@@ -186,13 +184,16 @@ export function AddPlantForm({
           />
         </View>
       ) : null}
-      <ActionButton style=title="Save" onPress={handleSubmit} />
-      <ActionButton title="Back" onPress={onBackButtonClick} />
+      <ActionButton style={styles.actionButton} title="Save" onPress={handleSubmit} />
+      <ActionButton style={styles.actionButton} title="Back" onPress={onBackButtonClick} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  actionButton: {
+  marginBottom: 10,
+  },
   row: {
     flexDirection: "row",
     alignItems: "center",
