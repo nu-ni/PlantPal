@@ -33,12 +33,14 @@ const styles = StyleSheet.create({
     overflow: 'visible',
     padding: 10,
     marginBottom: 10,
-    // TODO: fix shadwo
-    // shadowColor: '#000', 
-    // shadowOffset: { width: 0, height: 4 }, 
-    // shadowOpacity: 0.25, 
-    // shadowRadius: 3.84, 
-    // elevation: 5, 
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.45,
+    shadowRadius: 4.84,
+    elevation: 5,
   },
   circleContainer: {
     marginRight: 10,

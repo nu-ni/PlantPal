@@ -3,10 +3,9 @@ import { PlantCollection } from "@/data/models";
 import { deleteData, fetchAllCollectionsWithPlantCount, insertData, Tables } from "@/services/DatabaseService";
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, router } from "expo-router";
 import { View, StyleSheet, Image, Text, Modal, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
-import { useRouter } from "expo-router";
 import { ActionButton } from "@/components/actionButtton";
 
 export default function CollectionScreen() {
@@ -44,25 +43,25 @@ export default function CollectionScreen() {
     </TouchableOpacity>
   );
 
-  const renderSwipeableCard = (title: string, description: string, id: string) => (
-    <Swipeable renderRightActions={() => renderLeftActions(Number(id))}>
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => {
-          router.push(`/collectionDetails/${id}`);
-        }}
-      >
-        <View style={styles.cardTextContainer}>
-          <Text style={styles.cardTitle}>{title}</Text>
-          <Text style={styles.cardDescription}>{description}</Text>
-        </View>
-        <Image
-          style={styles.cardAvatar}
-          source={require('@/assets/images/user-solid.png')}
-        />
-      </TouchableOpacity>
-    </Swipeable>
-  );
+const renderSwipeableCard = (title: string, description: string, id: string) => (
+  <Swipeable key={id} renderRightActions={() => renderLeftActions(Number(id))}>
+    <TouchableOpacity
+      style={styles.card} 
+      onPress={() => {
+        router.push(`/collectionDetails/${id}`);
+      }}
+    >
+      <View style={styles.cardTextContainer}>
+        <Text style={styles.cardTitle}>{title}</Text>
+        <Text style={styles.cardDescription}>{description}</Text>
+      </View>
+      <Image
+        style={styles.cardAvatar}
+        source={require('@/assets/images/user-solid.png')}
+      />
+    </TouchableOpacity>
+  </Swipeable>
+);
 
   useEffect(() => {
     const firstTime = true;
@@ -121,7 +120,7 @@ export default function CollectionScreen() {
         </View>
       </GestureHandlerRootView>
 
-      {/* Add Collection Button */}
+      {/* Erster grosser, runder Button */}
       <View style={styles.roundButtonContainer}>
         <Pressable style={styles.roundButton} onPress={() => setIsModalVisible(true)}>
           <Text style={styles.roundButtonText}>+</Text>
@@ -157,21 +156,23 @@ export default function CollectionScreen() {
 }
 
 const styles = StyleSheet.create({
-  // Bestehende Stile bleiben unverändert
   cardContainer: {
     paddingHorizontal: 10,
     marginTop: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.45,
+    shadowRadius: 4.84,
+    elevation: 5,
   },
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
     padding: 17,
     marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -209,24 +210,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   roundButtonContainer: {
-    marginTop: 10,
     marginBottom: 30,
     alignItems: "center",
     justifyContent: "center",
   },
   roundButton: {
-    backgroundColor: "#66AE54",
-    width: 100,
-    height: 100,
+    backgroundColor: '#66AE54',
+    width: 60,
+    height: 60,
     borderRadius: 50,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.45,
+    shadowRadius: 4.84,
+    elevation: 5,
   },
   roundButtonText: {
-    color: "white",
+    color: 'white',
+    top: '-10%',
     fontSize: 50,
-    textAlign: "center",
-    marginBottom: 5,
+    textAlign: 'center',
   },
   modalContainer: {
     flex: 1,
